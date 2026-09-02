@@ -1,0 +1,41 @@
+#!/bin/sh
+# Keep docs/PROJECT_STATE.md in sync with the commit that was just created.
+#
+# Default behaviour: regenerate the AUTO blocks and fold them into the commit
+# with --amend, so the state file always matches its own commit exactly.
+# The amend rewrites the commit that was just made locally; that is safe before
+# a push and this hook refuses to run during rebase, merge or cherry-pick.
+#
+# Set PROJECT_STATE_NO_AMEND=1 to only stage the update instead of amending.
+# Set PROJECT_STATE_SKIP=1 to disable the hook for one commit.
+
+[ -n "$PROJECT_STATE_HOOK" ] && exit 0   # re-entry from our own amend
+[ -n "$PROJECT_STATE_SKIP" ] && exit 0
+
+if git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then exit 0; fi
+if [ -d "$(git rev-parse --git-path rebase-merge)" ]; then exit 0; fi
+if [ -d "$(git rev-parse --git-path rebase-apply)" ]; then exit 0; fi
+if [ -f "$(git rev-parse --git-path CHERRY_PICK_HEAD)" ]; then exit 0; fi
+if [ "$(git rev-list --no-walk --count --merges HEAD)" = "1" ]; then exit 0; fi
+
+root=$(git rev-parse --show-toplevel) || exit 0
+cd "$root" || exit 0
+
+if [ -n "$PROJECT_STATE_NO_AMEND" ]; then
+  python3 scripts/update_project_state.py --quiet || exit 0
+else
+  python3 scripts/update_project_state.py --quiet --amending || exit 0
+fi
+
+if git diff --quiet -- docs/PROJECT_STATE.md; then exit 0; fi
+
+if [ -n "$PROJECT_STATE_NO_AMEND" ]; then
+  git add docs/PROJECT_STATE.md
+  echo "PROJECT_STATE.md updated and staged for your next commit."
+  exit 0
+fi
+
+PROJECT_STATE_HOOK=1 git add docs/PROJECT_STATE.md
+PROJECT_STATE_HOOK=1 git commit --amend --no-edit --no-verify --quiet
+echo "PROJECT_STATE.md refreshed and folded into $(git rev-parse --short HEAD)."
+exit 0

@@ -1,0 +1,1217 @@
+<title>نقشه معماری کوین‌پالس</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F1F3F5; --surface:#FFFFFF; --surface2:#F7F9FB; --surface3:#EDF1F5;
+  --ink:#10151C; --ink2:#4E5A69; --ink3:#7A8797;
+  --line:#DCE2E9; --line2:#C6D0DB;
+  --accent:#2B50E0; --accent-soft:rgba(43,80,224,.09); --accent-ink:#2B50E0;
+  --signal:#9C5A00; --signal-soft:rgba(226,169,60,.16);
+  --up:#0F8A5F; --down:#C9312B;
+  --shadow:0 1px 2px rgba(16,21,28,.05), 0 8px 24px -16px rgba(16,21,28,.18);
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1117; --surface:#141A22; --surface2:#1A222C; --surface3:#20293480;
+    --ink:#E7ECF3; --ink2:#94A1B2; --ink3:#75828F;
+    --line:#253040; --line2:#33404F;
+    --accent:#6E8CFF; --accent-soft:rgba(110,140,255,.13); --accent-ink:#8AA2FF;
+    --signal:#E3A93C; --signal-soft:rgba(227,169,60,.15);
+    --up:#35C48D; --down:#F0655C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1117; --surface:#141A22; --surface2:#1A222C; --surface3:#20293480;
+  --ink:#E7ECF3; --ink2:#94A1B2; --ink3:#75828F;
+  --line:#253040; --line2:#33404F;
+  --accent:#6E8CFF; --accent-soft:rgba(110,140,255,.13); --accent-ink:#8AA2FF;
+  --signal:#E3A93C; --signal-soft:rgba(227,169,60,.15);
+  --up:#35C48D; --down:#F0655C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{
+  direction:rtl; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  font-size:15px; line-height:1.85; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px 96px}
+.prose{max-width:66ch}
+h1,h2,h3,h4{text-wrap:balance; line-height:1.35; margin:0}
+h1{font-size:clamp(30px,4.4vw,46px); font-weight:700; letter-spacing:-.02em}
+h2{font-size:clamp(21px,2.6vw,27px); font-weight:600; letter-spacing:-.01em}
+h3{font-size:17px; font-weight:600}
+h4{font-size:14px; font-weight:600}
+p{margin:0}
+a{color:var(--accent-ink); text-decoration-thickness:1px; text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+code,.mono,pre{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+code{font-size:.86em; background:var(--surface2); border:1px solid var(--line); border-radius:5px; padding:.08em .38em; direction:ltr; display:inline-block}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3)}
+
+/* ---------- header ---------- */
+header.top{border-bottom:1px solid var(--line); background:linear-gradient(180deg,var(--surface),transparent)}
+.top-in{max-width:1080px; margin:0 auto; padding:52px 22px 34px; display:flex; flex-direction:column; gap:18px}
+.badge{display:inline-flex; align-items:center; gap:8px; align-self:flex-start; font-size:12px; font-weight:500;
+  padding:5px 11px; border-radius:999px; background:var(--signal-soft); color:var(--signal); border:1px solid color-mix(in srgb,var(--signal) 30%,transparent)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.lede{font-size:17px; color:var(--ink2); max-width:64ch}
+.meta{display:flex; flex-wrap:wrap; gap:8px 26px; padding-top:6px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink3)}
+.meta b{font-weight:500; color:var(--ink2)}
+nav.idx{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+nav.idx ol{max-width:1080px; margin:0 auto; padding:10px 22px; display:flex; gap:6px; overflow-x:auto; list-style:none; scrollbar-width:thin}
+nav.idx a{display:block; white-space:nowrap; font-size:12.5px; color:var(--ink2); text-decoration:none;
+  padding:5px 11px; border-radius:999px; border:1px solid transparent}
+nav.idx a:hover{background:var(--surface); border-color:var(--line); color:var(--ink)}
+
+/* ---------- sections ---------- */
+section{padding-top:58px}
+.s-head{display:flex; flex-direction:column; gap:8px; margin-bottom:22px}
+.s-head .rule{height:2px; width:34px; background:var(--accent); border-radius:2px}
+.stack{display:flex; flex-direction:column; gap:16px}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:14px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow)}
+.card.flat{box-shadow:none; background:var(--surface2)}
+.card h3{margin-bottom:8px}
+.card p{color:var(--ink2); font-size:14px}
+ul.tick{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px; font-size:14px; color:var(--ink2)}
+ul.tick li{display:flex; gap:10px}
+ul.tick li::before{content:"—"; color:var(--accent); flex:none; font-family:"IBM Plex Mono",monospace}
+ul.tick.no li::before{content:"×"; color:var(--down)}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:13.5px}
+.kv dt{color:var(--ink3); font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.04em; padding-top:3px}
+.kv dd{margin:0; color:var(--ink2)}
+
+/* decision cards */
+.dec{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow)}
+.dec-h{display:flex; align-items:baseline; gap:10px; padding:14px 18px; background:var(--surface2); border-bottom:1px solid var(--line)}
+.dec-h .id{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--accent-ink); font-weight:500}
+.dec-b{padding:16px 18px; display:flex; flex-direction:column; gap:10px}
+.pick{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--ink)}
+.pick .tag{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 8px; border-radius:5px; background:var(--accent-soft); color:var(--accent-ink); font-weight:500}
+.why{font-size:13.5px; color:var(--ink2)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow)}
+table{width:100%; border-collapse:collapse; font-size:13.5px}
+th,td{text-align:right; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+thead th{background:var(--surface2); font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink3); font-weight:500; white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.mono,th.mono{direction:ltr; text-align:left; font-family:"IBM Plex Mono",monospace; font-size:12.5px; white-space:nowrap}
+td small{display:block; color:var(--ink3); font-size:12px}
+.m-get,.m-post,.m-del,.m-ws{font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:500; padding:2px 6px; border-radius:4px; letter-spacing:.05em}
+.m-get{background:rgba(15,138,95,.13); color:var(--up)} .m-post{background:var(--accent-soft); color:var(--accent-ink)}
+.m-del{background:rgba(201,49,43,.13); color:var(--down)} .m-ws{background:var(--signal-soft); color:var(--signal)}
+
+/* figures */
+figure{margin:0; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:20px; box-shadow:var(--shadow)}
+figure .svg-scroll{overflow-x:auto}
+figure svg{display:block; width:100%; min-width:600px; height:auto; color:var(--ink2)}
+figcaption{margin-top:14px; padding-top:12px; border-top:1px solid var(--line); font-size:13px; color:var(--ink3); max-width:70ch}
+pre{direction:ltr; text-align:left; overflow-x:auto; background:var(--surface2); border:1px solid var(--line);
+  border-radius:var(--r); padding:16px 18px; font-size:12.5px; line-height:1.75; color:var(--ink2); margin:0}
+pre b{color:var(--ink); font-weight:500}
+pre i{color:var(--ink3); font-style:normal}
+
+/* ---------- UI mockups ---------- */
+.wf{border:1px solid var(--line2); border-radius:12px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow)}
+.wf-bar{display:flex; align-items:center; gap:8px; padding:9px 13px; background:var(--surface2); border-bottom:1px solid var(--line)}
+.wf-bar .b{width:9px;height:9px;border-radius:50%;background:var(--line2)}
+.wf-bar .url{margin-inline-start:8px; direction:ltr; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink3);
+  background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:2px 9px}
+.app{display:grid; grid-template-columns:180px 1fr; min-height:330px}
+.side{border-inline-start:0; border-inline-end:1px solid var(--line); background:var(--surface2); padding:14px 12px; display:flex; flex-direction:column; gap:3px}
+.logo{display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px; padding:0 6px 12px}
+.logo .mark{width:20px;height:20px;border-radius:6px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:11px;font-family:"IBM Plex Mono",monospace}
+.side a{display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink2); text-decoration:none; padding:7px 9px; border-radius:7px}
+.side a.on{background:var(--accent-soft); color:var(--accent-ink); font-weight:600}
+.side .sep{margin-top:auto; font-size:11.5px; color:var(--ink3); padding:8px 9px; border-top:1px solid var(--line)}
+.main{padding:16px 18px; display:flex; flex-direction:column; gap:14px; min-width:0}
+.bar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.h-t{font-size:15px; font-weight:600}
+.search{flex:1; max-width:230px; font-size:12px; color:var(--ink3); background:var(--surface2); border:1px solid var(--line); border-radius:7px; padding:5px 10px}
+.btn{font-size:12.5px; font-weight:600; padding:6px 13px; border-radius:7px; background:var(--accent); color:#fff; border:0; white-space:nowrap}
+.btn.ghost{background:transparent; color:var(--ink2); border:1px solid var(--line2); font-weight:500}
+.mini{width:100%; border-collapse:collapse; font-size:12.5px}
+.mini th{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--line); font-family:"IBM Plex Mono",monospace}
+.mini td{padding:8px; border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.mini td.n{direction:ltr; text-align:left; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+.coin{display:flex; align-items:center; gap:8px; white-space:nowrap}
+.coin .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:700;font-family:"IBM Plex Mono",monospace;color:#fff}
+.coin b{font-weight:600} .coin span{color:var(--ink3); font-size:11px; font-family:"IBM Plex Mono",monospace}
+.up{color:var(--up)} .down{color:var(--down)}
+.tile{background:var(--surface2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; display:flex; flex-direction:column; gap:3px}
+.tile .lbl{font-size:11px; color:var(--ink3)}
+.tile .val{font-size:18px; font-weight:600; direction:ltr; text-align:right; font-variant-numeric:tabular-nums}
+.tile .sub{font-size:11.5px; direction:ltr; text-align:right; font-family:"IBM Plex Mono",monospace}
+.pill{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:2px 8px; border-radius:999px; white-space:nowrap}
+.p-on{background:rgba(15,138,95,.13); color:var(--up)} .p-fire{background:var(--signal-soft); color:var(--signal)}
+.p-off{background:var(--surface3); color:var(--ink3); border:1px solid var(--line)}
+.ranges{display:flex; gap:4px}
+.ranges span{font-size:11px; font-family:"IBM Plex Mono",monospace; padding:3px 9px; border-radius:6px; color:var(--ink3); border:1px solid transparent}
+.ranges span.on{background:var(--accent-soft); color:var(--accent-ink); border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.bell{width:24px;height:24px;border-radius:6px;border:1px solid var(--line2);display:inline-grid;place-items:center;color:var(--ink3);font-size:11px}
+.mock-label{display:flex; align-items:baseline; gap:10px; margin:0 0 10px}
+.mock-label b{font-size:14px; font-weight:600} .mock-label span{font-size:12.5px; color:var(--ink3)}
+.tg{background:#0F1620; border:1px solid #223046; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:9px}
+.tg .bub{align-self:flex-start; max-width:340px; background:#182534; border:1px solid #24374C; border-radius:12px 12px 12px 4px; padding:11px 13px; color:#DCE6F2; font-size:13px; line-height:1.8}
+.tg .bub .ttl{font-weight:700; color:#E3A93C; display:block; margin-bottom:3px}
+.tg .bub .n{direction:ltr; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+.tg .bub .btns{display:flex; gap:6px; margin-top:9px}
+.tg .bub .btns i{flex:1; text-align:center; font-style:normal; font-size:11.5px; background:#1F2E40; border:1px solid #2C4059; border-radius:7px; padding:5px; color:#9EC1EA}
+.tg .who{font-size:11px; color:#5C7186; font-family:"IBM Plex Mono",monospace}
+.modal{border:1px solid var(--line2); border-radius:10px; background:var(--surface); padding:15px; display:flex; flex-direction:column; gap:11px; max-width:330px; box-shadow:0 20px 40px -24px rgba(0,0,0,.5)}
+.field{display:flex; flex-direction:column; gap:5px}
+.field label{font-size:11.5px; color:var(--ink3)}
+.field .inp{font-size:12.5px; border:1px solid var(--line2); border-radius:7px; padding:6px 9px; background:var(--surface2); color:var(--ink2); direction:ltr; text-align:left; font-family:"IBM Plex Mono",monospace}
+.seg{display:flex; border:1px solid var(--line2); border-radius:7px; overflow:hidden}
+.seg i{flex:1; text-align:center; font-style:normal; font-size:11.5px; padding:6px; color:var(--ink3)}
+.seg i.on{background:var(--accent-soft); color:var(--accent-ink); font-weight:600}
+.steps{list-style:none; margin:0; padding:0; counter-reset:s; display:flex; flex-direction:column; gap:14px}
+.steps li{counter-increment:s; display:grid; grid-template-columns:30px 1fr; gap:14px; align-items:start}
+.steps li::before{content:counter(s,decimal-leading-zero); font-family:"IBM Plex Mono",monospace; font-size:12px;
+  color:var(--accent-ink); background:var(--accent-soft); border-radius:7px; text-align:center; padding:4px 0; font-weight:500}
+.steps h4{margin-bottom:3px} .steps p{font-size:13.5px; color:var(--ink2)}
+.ask{background:var(--surface); border:1px solid var(--line); border-inline-start:3px solid var(--signal); border-radius:var(--r); padding:16px 18px; display:flex; flex-direction:column; gap:6px}
+.ask .q{font-weight:600; font-size:14.5px}
+.ask .o{font-size:13.5px; color:var(--ink2)}
+.ask .o b{color:var(--ink); font-weight:600}
+footer{margin-top:64px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink3)}
+@media (max-width:640px){ .app{grid-template-columns:1fr} .side{display:none} .wrap{padding:0 16px 72px} }
+@media (prefers-reduced-motion:no-preference){ nav.idx a{transition:background .15s,color .15s} }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <span class="badge"><span class="dot"></span>نسخه ۲ — تصمیم‌های مالک پروژه اعمال شد · منتظر چراغ سبز نهایی برای شروع کدنویسی</span>
+    <h1>کوین‌پالس — معماری و طراحی</h1>
+    <p class="lede">سبد ارز دیجیتال با قیمت لحظه‌ای ۵۰ ارز برتر، نمودار تاریخی، هشدار قیمتی و اطلاع‌رسانی فوری در تلگرام. این سند تمام تصمیم‌های فنی، مدل داده، قرارداد API و ظاهر نهایی رابط کاربری را قبل از شروع پیاده‌سازی مشخص می‌کند.</p>
+    <div class="meta">
+      <span>مخزن: <b class="mono" dir="ltr">vshahparifard-cloud/crypto_portfolio</b></span>
+      <span>پشته: <b>FastAPI · Vue 3 · PostgreSQL · Redis</b></span>
+      <span>تاریخ: <b class="num">۱۴۰۵/۰۶/۱۱ — 2026-09-02</b></span>
+      <span>نسخه سند: <b class="num">v2</b> — CoinGecko · تایید ایمیل · فارسی</span>
+    </div>
+  </div>
+</header>
+
+<nav class="idx" aria-label="فهرست سند">
+  <ol>
+    <li><a href="#scope">دامنه</a></li>
+    <li><a href="#decisions">تصمیم‌های معماری</a></li>
+    <li><a href="#topology">نمودار سیستم</a></li>
+    <li><a href="#alerts">چرخه هشدار</a></li>
+    <li><a href="#data">مدل داده</a></li>
+    <li><a href="#api">قرارداد API</a></li>
+    <li><a href="#jobs">کارگرهای پس‌زمینه</a></li>
+    <li><a href="#ui">طراحی رابط کاربری</a></li>
+    <li><a href="#repo">ساختار مخزن</a></li>
+    <li><a href="#roadmap">نقشه راه</a></li>
+    <li><a href="#approve">تاییدیه لازم</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+<section id="scope">
+  <div class="s-head"><span class="eyebrow">Scope</span><span class="rule"></span><h2>محصول چه کاری می‌کند و چه کاری نمی‌کند</h2></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>در دامنه نسخه ۱</h3>
+      <ul class="tick">
+        <li>فهرست ۵۰ ارز برتر بازار با قیمت، تغییر ۲۴ ساعته، حجم، ارزش بازار و اسپارک‌لاین</li>
+        <li>صفحه اختصاصی هر ارز با نمودار تعاملی (۲۴ ساعت تا ۱ سال) و آمار کلیدی</li>
+        <li>ثبت‌نام و ورود با ایمیل و رمز، همراه تایید ایمیل و بازیابی رمز (JWT + Refresh Token چرخشی)</li>
+        <li>سبد شخصی: مقدار دارایی، میانگین قیمت خرید، ارزش لحظه‌ای، سود/زیان و درصد تخصیص</li>
+        <li>هشدار روی هر ارز: حد بالا، حد پایین و ریزش/جهش درصدی در پنجره زمانی</li>
+        <li>اتصال حساب به ربات تلگرام با لینک یک‌بارمصرف و ارسال فوری اخطار</li>
+        <li>تاریخچه هشدارهای فعال‌شده و وضعیت تحویل پیام</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>بیرون از دامنه نسخه ۱</h3>
+      <ul class="tick no">
+        <li>اتصال به کیف پول یا صرافی برای همگام‌سازی خودکار موجودی</li>
+        <li>هر نوع سفارش‌گذاری، معامله یا انتقال دارایی — سیستم فقط پایش و اطلاع‌رسانی است</li>
+        <li>توصیه سرمایه‌گذاری، سیگنال خرید و فروش یا امتیازدهی به ارزها</li>
+        <li>اپلیکیشن موبایل بومی (وب‌اپ واکنش‌گرا و PWA کافی است)</li>
+        <li>چند‌کاربره بودن یک سبد و نقش‌های سازمانی</li>
+        <li>هشدار قیمتی روی ایمیل یا پوش مرورگر — ایمیل فقط برای تایید حساب و بازیابی رمز است، کانال هشدار تلگرام است</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="decisions">
+  <div class="s-head"><span class="eyebrow">Decisions</span><span class="rule"></span><h2>تصمیم‌های معماری و دلیل هرکدام</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">هر تصمیم یک انتخاب پیشنهادی دارد؛ اگر با موردی موافق نیستید همان را در بازخورد بگویید، بقیه سند تغییر نمی‌کند.</p>
+  </div>
+  <div class="stack">
+
+    <div class="dec">
+      <div class="dec-h"><span class="id">D1</span><h3>منبع قیمت: CoinGecko — انتخاب مالک پروژه</h3></div>
+      <div class="dec-b">
+        <p class="why">شما CoinGecko را انتخاب کردید و کل معماری روی همین بنا شد. سهم رایگان سقف حدود <span class="num">۱۰٬۰۰۰</span> درخواست در ماه دارد، پس تمام بودجه با یک قاعده خرج می‌شود: <b>یک فراخوان هر ۵ دقیقه</b> به <code>/coins/markets</code> که در همان یک پاسخ، قیمت و ارزش بازار و تغییر ۲۴ ساعته و اسپارک‌لاین هفتگی هر ۵۰ ارز را می‌آورد. جستجو، صفحه ارز و نمودار همه از دیتابیس خودمان سرو می‌شوند و هیچ فراخوان اضافه‌ای نمی‌سازند.</p>
+        <span class="pick"><span class="tag">قطعی</span>یک فراخوان / ۵ دقیقه · ۵۰ ارز در هر پاسخ · کندل‌ها از داده خودمان ساخته می‌شود</span>
+        <p class="why">هزینه این تصمیم را صریح می‌نویسم تا بعد غافلگیر نشوید: <b>تاخیر هشدار تا ۵ دقیقه</b> (میانگین حدود ۲٫۵ دقیقه) و <b>نابینایی نسبت به نوسان درون بازه</b> — اگر قیمت بین دو نمونه‌گیری زیر حد ضرر برود و برگردد، هشداری ساخته نمی‌شود. برای همین کل دسترسی به قیمت پشت اینترفیس <code>PriceSource</code> می‌ماند: روزی که سهم پولی بگیرید، فقط <code>POLL_INTERVAL</code> از ۳۰۰ ثانیه به ۱۵ ثانیه می‌رسد و هیچ‌جای دیگری از سیستم عوض نمی‌شود.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="svg-scroll">
+      <svg viewBox="0 0 980 350" role="img" aria-label="مکانیزم مصرف بودجه: یک فراخوان هر پنج دقیقه به CoinGecko قیمت پنجاه ارز را می‌آورد، در Redis کش می‌شود و به مرورگر می‌رود، همزمان عکس لحظه‌ای ثبت می‌شود و از آن کندل ساعتی و روزانه ساخته می‌شود؛ فراخوان تاریخچه فقط یک‌بار برای هر ارز انجام می‌شود" font-family="IBM Plex Sans Arabic, sans-serif" font-size="12">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g fill="none" stroke="currentColor" stroke-opacity=".55">
+          <rect x="770" y="40" width="180" height="52" rx="7" stroke-dasharray="4 3"/>
+          <rect x="560" y="40" width="170" height="52" rx="7" stroke="#2B50E0" stroke-opacity=".8"/>
+          <rect x="350" y="40" width="170" height="52" rx="7"/>
+          <rect x="140" y="40" width="170" height="52" rx="7"/>
+          <rect x="560" y="140" width="170" height="48" rx="7"/>
+          <rect x="350" y="140" width="170" height="48" rx="7"/>
+          <rect x="140" y="140" width="170" height="48" rx="7"/>
+          <rect x="140" y="225" width="170" height="44" rx="7"/>
+          <rect x="770" y="225" width="180" height="44" rx="7" stroke-dasharray="4 3"/>
+        </g>
+        <g fill="currentColor" text-anchor="middle">
+          <text x="860" y="62" font-family="IBM Plex Mono, monospace" font-size="11">GET /coins/markets</text>
+          <text x="860" y="80" font-size="10.5" fill-opacity=".7">۱ درخواست هر ۵ دقیقه</text>
+          <text x="645" y="62" font-family="IBM Plex Mono, monospace" font-size="11" fill="#2B50E0">market_poll</text>
+          <text x="645" y="80" font-size="10.5" fill-opacity=".7">تنها نقطه تماس با بیرون</text>
+          <text x="435" y="62" font-family="IBM Plex Mono, monospace" font-size="11">redis price:{id}</text>
+          <text x="435" y="80" font-size="10.5" fill-opacity=".7">کش + pubsub</text>
+          <text x="225" y="62" font-size="11.5">مرورگر کاربر</text>
+          <text x="225" y="80" font-size="10.5" fill-opacity=".7">SSE — فهرست و صفحه ارز</text>
+          <text x="645" y="160" font-family="IBM Plex Mono, monospace" font-size="11">price_snapshots</text>
+          <text x="645" y="177" font-size="10.5" fill-opacity=".7">یک ردیف برای هر ارز</text>
+          <text x="435" y="160" font-family="IBM Plex Mono, monospace" font-size="11">candle_aggregator</text>
+          <text x="435" y="177" font-size="10.5" fill-opacity=".7">بدون تماس بیرونی</text>
+          <text x="225" y="160" font-family="IBM Plex Mono, monospace" font-size="11">ohlc_candles</text>
+          <text x="225" y="177" font-size="10.5" fill-opacity=".7">1h · 1d</text>
+          <text x="225" y="243" font-family="IBM Plex Mono, monospace" font-size="10.5">GET /market/coins/{id}/chart</text>
+          <text x="225" y="259" font-size="10.5" fill-opacity=".7">نمودار تعاملی</text>
+          <text x="860" y="245" font-family="IBM Plex Mono, monospace" font-size="10.5">GET /market_chart</text>
+          <text x="860" y="261" font-size="10.5" fill-opacity=".7">یک‌بار برای هر ارز — تاریخچه</text>
+        </g>
+        <g fill="none" stroke="currentColor" stroke-opacity=".6" marker-end="url(#a5)">
+          <line x1="768" y1="66" x2="732" y2="66"/>
+          <line x1="558" y1="66" x2="522" y2="66"/>
+          <line x1="348" y1="66" x2="312" y2="66"/>
+          <line x1="645" y1="92" x2="645" y2="138"/>
+          <line x1="558" y1="164" x2="522" y2="164"/>
+          <line x1="348" y1="164" x2="312" y2="164"/>
+          <line x1="225" y1="190" x2="225" y2="223"/>
+          <polyline points="768,247 330,247 330,175 314,175" stroke-dasharray="5 4"/>
+        </g>
+        <g fill="currentColor" font-size="10" text-anchor="middle">
+          <text x="750" y="56">۵۰ ارز</text>
+          <text x="540" y="56">قیمت</text>
+          <text x="330" y="56">انتشار</text>
+          <text x="672" y="120" text-anchor="start">هر ۵ دقیقه</text>
+          <text x="540" y="156">تجمیع</text>
+          <text x="500" y="240" text-anchor="middle">تاریخچه اولیه — بدون تکرار</text>
+        </g>
+        <g>
+          <text x="950" y="296" text-anchor="end" font-size="11" fill="currentColor" fill-opacity=".75">بودجه ماهانه CoinGecko — سقف <tspan font-family="IBM Plex Mono, monospace">10,000</tspan></text>
+          <rect x="140" y="306" width="810" height="18" rx="4" fill="none" stroke="currentColor" stroke-opacity=".35"/>
+          <rect x="238" y="306" width="712" height="18" rx="4" fill="#2B50E0" fill-opacity=".22"/>
+          <text x="594" y="319" text-anchor="middle" font-size="10" fill="currentColor">مصرف ثابت ۸٬۷۹۰ — پایش ۸٬۶۴۰ · فهرست ارزها ۳۰ · تاریخچه ۱۲۰</text>
+          <text x="188" y="319" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".7">ذخیره ۱٬۲۱۰</text>
+        </g>
+      </svg>
+      </div>
+      <figcaption>همان یک فراخوان هر ۵ دقیقه، هم قیمت زنده فهرست را تامین می‌کند و هم داده‌ای که خودمان از آن کندل می‌سازیم؛ به همین دلیل هیچ صفحه‌ای در سایت، هر تعداد بازدید که داشته باشد، بودجه CoinGecko را مصرف نمی‌کند. تنها فراخوان دوم، تاریخچه اولیه هر ارز است که یک‌بار برای همیشه گرفته می‌شود.</figcaption>
+    </figure>
+
+    <div class="grid2">
+      <div class="dec">
+        <div class="dec-h"><span class="id">D2</span><h3>صف و زمان‌بندی کارها</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>ARQ روی همان Redis</span>
+          <p class="why">Celery برای این حجم کار سنگین و همگام است؛ ARQ کاملاً async است، با استک FastAPI هم‌خانواده می‌شود، زمان‌بندی دوره‌ای (cron) دارد و به بروکر جداگانه نیاز ندارد. سه کارگر مستقل: پایش قیمت، ارزیابی هشدار، ارسال تلگرام.</p>
+        </div>
+      </div>
+      <div class="dec">
+        <div class="dec-h"><span class="id">D3</span><h3>تاریخچه قیمت</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>کندل خودساخته + پارتیشن ماهانه</span>
+          <p class="why">کندل‌های <code>1h</code> و <code>1d</code> را خودمان از عکس‌های لحظه‌ای پنج‌دقیقه‌ای می‌سازیم و تاریخچه پیش از راه‌اندازی را یک‌بار از <code>market_chart</code> می‌گیریم؛ پس نمودار یک‌ساله با یک کوئری ایندکس‌خورده می‌آید و هیچ بازدیدی بودجه CoinGecko را خرج نمی‌کند. اگر افزونه TimescaleDB روی سرور باشد hypertable می‌گیریم، وگرنه پارتیشن بومی PostgreSQL کافی است.</p>
+        </div>
+      </div>
+      <div class="dec">
+        <div class="dec-h"><span class="id">D4</span><h3>به‌روزرسانی زنده در مرورگر</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>SSE برای فهرست، بدون وب‌سوکت در نسخه ۱</span>
+          <p class="why">جریان قیمت یک‌طرفه است؛ <code>text/event-stream</code> از Redis pub/sub تغذیه می‌شود، از پشت پروکسی و CDN بی‌دردسر رد می‌شود و کد کلاینت آن یک خط است. اگر بعداً تعامل دوطرفه لازم شد، همان مسیر به وب‌سوکت ارتقا می‌یابد.</p>
+        </div>
+      </div>
+      <div class="dec">
+        <div class="dec-h"><span class="id">D5</span><h3>احراز هویت</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>Access JWT پانزده‌دقیقه‌ای + Refresh چرخشی در کوکی HttpOnly</span>
+          <p class="why">توکن دسترسی کوتاه در حافظه، توکن تازه‌سازی به‌صورت هش‌شده در دیتابیس تا قابل ابطال باشد. رمزها با Argon2id. اتصال تلگرام هرگز جای ورود را نمی‌گیرد، فقط کانال اطلاع‌رسانی حساب موجود است.</p>
+        </div>
+      </div>
+      <div class="dec">
+        <div class="dec-h"><span class="id">D6</span><h3>تحویل پیام تلگرام</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>الگوی Outbox با تلاش مجدد نمایی</span>
+          <p class="why">ارزیاب هشدار هیچ‌وقت خودش به تلگرام درخواست نمی‌زند؛ فقط یک رکورد رویداد می‌سازد. کارگر ارسال آن را برمی‌دارد، سقف نرخ تلگرام را رعایت می‌کند و در خطا با فاصله فزاینده دوباره تلاش می‌کند. نتیجه: قطعی تلگرام هیچ هشداری را گم نمی‌کند و کاربر پیام تکراری نمی‌گیرد.</p>
+        </div>
+      </div>
+      <div class="dec">
+        <div class="dec-h"><span class="id">D7</span><h3>فرانت‌اند</h3></div>
+        <div class="dec-b">
+          <span class="pick"><span class="tag">قطعی</span>Vue 3 + Vite + TypeScript + Pinia + ECharts</span>
+          <p class="why">ECharts برای نمودار مالی از Chart.js بهتر است: کندل، محور زمان لگاریتمی، خطوط آستانه و زوم را بومی دارد و می‌توانیم آستانه‌های هشدار کاربر را مستقیم روی نمودار بکشیم. استایل با Tailwind و توکن‌های تعریف‌شده در بخش رابط کاربری.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="topology">
+  <div class="s-head"><span class="eyebrow">Topology</span><span class="rule"></span><h2>نمودار سیستم</h2></div>
+  <figure>
+    <div class="svg-scroll">
+    <svg viewBox="0 0 980 575" role="img" aria-label="نمودار معماری: اپ Vue با API فاست‌ای‌پی‌آی حرف می‌زند، API روی PostgreSQL و Redis کار می‌کند، و کارگرهای پس‌زمینه هر پنج دقیقه قیمت را از CoinGecko می‌گیرند، هشدارها را ارزیابی می‌کنند و پیام را از طریق API تلگرام به کاربر می‌رسانند" font-family="IBM Plex Sans Arabic, sans-serif" font-size="12">
+      <defs>
+        <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g stroke="currentColor" stroke-opacity=".55" fill="none">
+        <!-- band frames -->
+        <rect x="380" y="26" width="300" height="52" rx="8"/>
+        <rect x="250" y="140" width="490" height="86" rx="8"/>
+        <rect x="140" y="272" width="230" height="76" rx="8"/>
+        <rect x="430" y="272" width="230" height="76" rx="8"/>
+        <rect x="228" y="392" width="534" height="80" rx="9" stroke-dasharray="5 4" stroke-opacity=".3"/>
+        <rect x="240" y="406" width="150" height="52" rx="7"/>
+        <rect x="420" y="406" width="150" height="52" rx="7"/>
+        <rect x="600" y="406" width="150" height="52" rx="7"/>
+        <rect x="790" y="398" width="160" height="38" rx="7" stroke-dasharray="4 3"/>
+        <rect x="790" y="450" width="160" height="38" rx="7" stroke-dasharray="4 3"/>
+        <rect x="30" y="406" width="160" height="38" rx="7" stroke-dasharray="4 3"/>
+        <rect x="30" y="492" width="160" height="38" rx="7" stroke-dasharray="4 3"/>
+        <!-- API inner modules -->
+        <g stroke-opacity=".28">
+          <rect x="262" y="178" width="108" height="34" rx="5"/>
+          <rect x="378" y="178" width="108" height="34" rx="5"/>
+          <rect x="494" y="178" width="108" height="34" rx="5"/>
+          <rect x="610" y="178" width="118" height="34" rx="5"/>
+        </g>
+      </g>
+      <g fill="currentColor" text-anchor="middle">
+        <text x="530" y="49" font-family="IBM Plex Mono, monospace" font-size="12.5">Vue 3 SPA</text>
+        <text x="530" y="66" font-size="11" fill-opacity=".7">مرورگر کاربر — Vite · Pinia · ECharts</text>
+        <text x="495" y="164" font-family="IBM Plex Mono, monospace" font-size="12.5">FastAPI (uvicorn)</text>
+        <g font-family="IBM Plex Mono, monospace" font-size="10.5" fill-opacity=".85">
+          <text x="316" y="199">auth</text><text x="432" y="199">market</text>
+          <text x="548" y="199">portfolio</text><text x="669" y="199">alerts + telegram</text>
+        </g>
+        <text x="255" y="303" font-family="IBM Plex Mono, monospace" font-size="12.5">PostgreSQL 16</text>
+        <text x="255" y="322" font-size="10.5" fill-opacity=".7">کاربر · سبد · هشدار · کندل</text>
+        <text x="545" y="303" font-family="IBM Plex Mono, monospace" font-size="12.5">Redis 7</text>
+        <text x="545" y="322" font-size="10.5" fill-opacity=".7">کش · صف ARQ · pub/sub</text>
+        <text x="762" y="386" font-size="10.5" fill-opacity=".55" text-anchor="end">ARQ workers — پردازه جدا از API</text>
+        <g font-family="IBM Plex Mono, monospace" font-size="11">
+          <text x="315" y="429">telegram_sender</text><text x="495" y="429">alert_evaluator</text><text x="675" y="429">market_poll</text>
+        </g>
+        <g font-size="10" fill-opacity=".7">
+          <text x="315" y="446">+ email_sender · outbox</text><text x="495" y="446">با هر نمونه قیمت</text><text x="675" y="446">+ candle_aggregator</text>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="11">
+          <text x="870" y="416">CoinGecko markets</text><text x="870" y="468">CoinGecko chart</text>
+          <text x="110" y="424">Telegram Bot API</text>
+        </g>
+        <g font-size="10" fill-opacity=".7">
+          <text x="870" y="430">۵۰ ارز · هر ۵ دقیقه</text><text x="870" y="482">تاریخچه · یک‌بار</text>
+        </g>
+        <text x="110" y="516" font-size="11.5">کاربر در تلگرام</text>
+      </g>
+      <!-- edges -->
+      <g stroke="currentColor" stroke-opacity=".6" fill="none" marker-end="url(#a2)">
+        <line x1="470" y1="78" x2="470" y2="138"/>
+        <line x1="600" y1="140" x2="600" y2="80"/>
+        <line x1="320" y1="226" x2="300" y2="270"/>
+        <line x1="565" y1="226" x2="565" y2="270"/>
+        <line x1="675" y1="406" x2="645" y2="350"/>
+        <line x1="500" y1="406" x2="520" y2="350"/>
+        <line x1="450" y1="406" x2="345" y2="350"/>
+        <line x1="235" y1="350" x2="300" y2="404"/>
+        <line x1="788" y1="417" x2="752" y2="424"/>
+        <line x1="788" y1="466" x2="752" y2="440"/>
+        <line x1="238" y1="428" x2="192" y2="426"/>
+        <line x1="110" y1="444" x2="110" y2="490"/>
+        <polyline points="675,458 675,548 110,548 110,532" stroke-dasharray="0"/>
+      </g>
+      <g fill="currentColor" font-size="10" fill-opacity=".9">
+        <text x="478" y="112">HTTPS · JSON</text>
+        <text x="608" y="112">SSE به‌روزرسانی قیمت</text>
+        <text x="228" y="253">SQLAlchemy async</text>
+        <text x="573" y="253">کش تا نمونه بعدی</text>
+        <text x="683" y="378">نوشتن ۵۰ قیمت + انتشار</text>
+        <text x="508" y="378" text-anchor="middle">خواندن قیمت</text>
+        <text x="352" y="378" text-anchor="end">ثبت alert_event</text>
+        <text x="150" y="368">برداشتن از outbox</text>
+        <text x="820" y="560" text-anchor="middle">عکس لحظه‌ای هر ۵ دقیقه + ساخت کندل ۱h و ۱d</text>
+        <text x="112" y="470">sendMessage</text>
+      </g>
+      <!-- candle backfill route -->
+      <g stroke="currentColor" stroke-opacity=".45" fill="none" stroke-dasharray="5 4" marker-end="url(#a2)">
+        <polyline points="700,458 700,540 205,540 205,350"/>
+      </g>
+    </svg>
+    </div>
+    <figcaption>API هیچ‌وقت مستقیم به سرویس بیرونی وصل نمی‌شود؛ تنها منبع قیمت برای پاسخ‌های وب، کش Redis است که <code>market_poll</code> آن را هر ۵ دقیقه تازه می‌کند. به همین دلیل قطعی یا سقف نرخ CoinGecko فقط باعث کهنه شدن قیمت می‌شود، نه از کار افتادن سایت — و هیچ بازدید کاربر، بودجه فراخوان را مصرف نمی‌کند.</figcaption>
+  </figure>
+
+  <div class="grid3" style="margin-top:14px">
+    <div class="card flat"><h4>مرزهای پردازه</h4><p style="font-size:13.5px">API، کارگرها و ربات تلگرام سه سرویس جدا در docker-compose هستند و فقط از طریق Redis و PostgreSQL با هم حرف می‌زنند؛ هیچ حالت درون‌حافظه‌ای مشترکی وجود ندارد تا مقیاس افقی ممکن بماند.</p></div>
+    <div class="card flat"><h4>یکتایی ارزیاب</h4><p style="font-size:13.5px">ارزیاب هشدار با قفل Redis اجرا می‌شود؛ اگر دو نمونه بالا بیاید، فقط یکی در هر دوره کار می‌کند تا هشدار دوباره ارسال نشود.</p></div>
+    <div class="card flat"><h4>پایش سلامت</h4><p style="font-size:13.5px">هر کارگر آخرین اجرای موفق خود را در Redis مهر می‌زند؛ <code>/health</code> کهنگی این مهرها را گزارش می‌دهد تا اگر جریان قیمت خوابید، بی‌صدا نماند.</p></div>
+  </div>
+</section>
+
+<section id="alerts">
+  <div class="s-head"><span class="eyebrow">Alert engine</span><span class="rule"></span><h2>چرخه عمر هشدار</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">مهم‌ترین ریسک این محصول، هشدار تکراری و هشدار گم‌شده است. منطق روی «عبور از آستانه» بنا می‌شود، نه «بزرگ‌تر بودن از آستانه».</p>
+  </div>
+  <figure>
+    <div class="svg-scroll">
+    <svg viewBox="0 0 900 260" role="img" aria-label="ماشین حالت هشدار: از حالت فعال با عبور قیمت از آستانه به فعال‌شده می‌رود، سپس یا در حالت خواب سرد می‌ماند و به فعال برمی‌گردد یا اگر یک‌بارمصرف باشد پایان می‌یابد" font-family="IBM Plex Sans Arabic, sans-serif" font-size="12">
+      <defs>
+        <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-opacity=".55">
+        <rect x="700" y="60" width="160" height="54" rx="27"/>
+        <rect x="440" y="60" width="160" height="54" rx="8" stroke="#E3A93C" stroke-opacity="1"/>
+        <rect x="200" y="60" width="160" height="54" rx="8"/>
+        <rect x="700" y="170" width="160" height="46" rx="8" stroke-dasharray="4 3"/>
+        <rect x="440" y="170" width="160" height="46" rx="27"/>
+      </g>
+      <g fill="currentColor" text-anchor="middle">
+        <text x="780" y="84" font-family="IBM Plex Mono, monospace" font-size="12">active</text>
+        <text x="780" y="101" font-size="10.5" fill-opacity=".7">در حال پایش</text>
+        <text x="520" y="84" font-family="IBM Plex Mono, monospace" font-size="12" fill="#9C5A00">triggered</text>
+        <text x="520" y="101" font-size="10.5" fill-opacity=".75">رویداد ثبت و پیام صف شد</text>
+        <text x="280" y="84" font-family="IBM Plex Mono, monospace" font-size="12">cooling</text>
+        <text x="280" y="101" font-size="10.5" fill-opacity=".7">تا پایان cooldown ساکت</text>
+        <text x="780" y="190" font-family="IBM Plex Mono, monospace" font-size="11">paused / expired</text>
+        <text x="780" y="206" font-size="10.5" fill-opacity=".7">یک‌بارمصرف یا دستی</text>
+        <text x="520" y="190" font-family="IBM Plex Mono, monospace" font-size="11">done</text>
+        <text x="520" y="206" font-size="10.5" fill-opacity=".7">در تاریخچه می‌ماند</text>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-opacity=".6" marker-end="url(#a3)">
+        <line x1="698" y1="87" x2="602" y2="87"/>
+        <line x1="438" y1="87" x2="362" y2="87"/>
+        <polyline points="280,116 280,145 780,145 780,118"/>
+        <line x1="780" y1="116" x2="780" y2="168"/>
+        <line x1="700" y1="193" x2="602" y2="193"/>
+      </g>
+      <g fill="currentColor" font-size="10.5" text-anchor="middle">
+        <text x="650" y="76">عبور قیمت از آستانه</text>
+        <text x="400" y="76">ارسال به تلگرام</text>
+        <text x="530" y="138">پایان مهلت سکوت — تکرارشدنی</text>
+        <text x="828" y="146" text-anchor="start">یک‌بارمصرف</text>
+        <text x="650" y="185">پایان</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>گذار «عبور از آستانه» فقط وقتی رخ می‌دهد که قیمت قبلی یک طرف آستانه و قیمت جدید طرف دیگر آن باشد؛ ماندن در ناحیه هدف دوباره هشدار نمی‌سازد.</figcaption>
+  </figure>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><h3>چهار نوع هشدار</h3>
+      <ul class="tick">
+        <li><code>price_above</code> — قیمت از حد سود بالاتر رفت</li>
+        <li><code>price_below</code> — قیمت زیر حد ضرر آمد</li>
+        <li><code>pct_up</code> — جهش درصدی در پنجره ۱۵ / ۳۰ / ۶۰ دقیقه</li>
+        <li><code>pct_down</code> — ریزش ناگهانی در همان پنجره‌ها</li>
+      </ul>
+    </div>
+    <div class="card"><h3>قواعد ضد‌نویز</h3>
+      <ul class="tick">
+        <li>مهلت سکوت پیش‌فرض ۶۰ دقیقه، قابل تنظیم برای هر هشدار</li>
+        <li>حالت یک‌بارمصرف: پس از اولین فعال‌شدن خودش را متوقف می‌کند</li>
+        <li>سقف تعداد هشدار فعال برای هر کاربر (پیش‌فرض ۵۰) تا سوءاستفاده نشود</li>
+        <li>ساعت آرام اختیاری بر اساس منطقه زمانی کاربر؛ هشدار ثبت می‌شود ولی پیام بعد از پایان بازه می‌رود</li>
+        <li>کلید یکتای <code>(alert_id, bucket)</code> روی رویدادها جلوی ارسال دوباره در اجرای همزمان را می‌گیرد</li>
+      </ul>
+    </div>
+    <div class="card" style="border-inline-start:3px solid var(--signal)"><h3>هزینه‌ای که منبع ۵ دقیقه‌ای تحمیل می‌کند</h3>
+      <ul class="tick">
+        <li>تاخیر تشخیص تا ۵ دقیقه؛ عدد دقیق نمونه‌گیری داخل پیام تلگرام نوشته می‌شود</li>
+        <li>نوسان درون بازه دیده نمی‌شود: عبور و بازگشت بین دو نمونه، هشدار نمی‌سازد</li>
+        <li>پنجره درصدی از ۱۵ دقیقه شروع می‌شود؛ پنجره ۵ دقیقه با نمونه‌گیری ۵ دقیقه بی‌معنی است</li>
+        <li>فهرست بازار و صفحه ارز، سن داده را نشان می‌دهند تا کاربر «زنده» نپندارد</li>
+        <li>مسیر ارتقا آماده است: با سهم پولی، <code>POLL_INTERVAL=15s</code> و تاخیر به ۱۵ ثانیه می‌رسد</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="s-head"><span class="eyebrow">Data model</span><span class="rule"></span><h2>مدل داده</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">همه مقادیر پولی و مقداری <code>numeric</code> هستند، هیچ‌جا <code>float</code> نداریم؛ در سیستم مالی خطای گرد کردن اعشار دودویی قابل قبول نیست. همه زمان‌ها <code>timestamptz</code> و ذخیره‌شده در UTC.</p>
+  </div>
+  <figure>
+    <div class="svg-scroll">
+    <svg viewBox="0 0 1000 700" role="img" aria-label="نمودار موجودیت‌رابطه: کاربر مالک سبد، هشدار، توکن تازه‌سازی و توکن اتصال تلگرام است؛ سبد شامل دارایی‌ها، هر دارایی و هشدار به یک ارز اشاره می‌کند، و هر ارز کندل و عکس لحظه‌ای قیمت دارد" font-family="IBM Plex Mono, monospace" direction="ltr" font-size="10.5">
+      <defs>
+        <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <g transform="translate(760,20)">
+        <rect width="210" height="160" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="28" x2="210" y2="28" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="19" font-size="12" fill="currentColor">users</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="45">id · uuid PK</text>
+          <text x="12" y="61">email · citext UQ</text>
+          <text x="12" y="77">password_hash · argon2id</text>
+          <text x="12" y="93">telegram_chat_id · int8 UQ</text>
+          <text x="12" y="109">timezone · text</text>
+          <text x="12" y="125">quiet_hours · int4range</text>
+          <text x="12" y="141">is_verified · is_active · created_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(760,200)">
+        <rect width="210" height="90" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">refresh_tokens</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">token_hash · PK</text>
+          <text x="12" y="59">user_id · FK</text>
+          <text x="12" y="75">expires_at · revoked_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(760,310)">
+        <rect width="210" height="90" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">telegram_link_tokens</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">token · PK · 32 bytes</text>
+          <text x="12" y="59">user_id · FK</text>
+          <text x="12" y="75">expires_at · used_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(760,440)">
+        <rect width="210" height="95" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">email_tokens</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">token_hash · PK</text>
+          <text x="12" y="59">user_id · FK</text>
+          <text x="12" y="75">purpose · verify | reset</text>
+          <text x="12" y="91" fill-opacity=".7">expires_at · used_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(760,555)">
+        <rect width="210" height="110" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">email_outbox</text>
+        <text x="200" y="18" font-size="9" text-anchor="end" fill="currentColor" fill-opacity=".55">OUTBOX</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">id · uuid PK</text>
+          <text x="12" y="59">user_id · FK · to_email</text>
+          <text x="12" y="75">kind · verify | reset</text>
+          <text x="12" y="91">delivery_state · attempts</text>
+          <text x="12" y="107" fill-opacity=".7">next_retry_at · sent_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(510,20)">
+        <rect width="210" height="100" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">portfolios</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">id · uuid PK</text>
+          <text x="12" y="59">user_id · FK</text>
+          <text x="12" y="75">name · base_currency</text>
+          <text x="12" y="91">is_default · created_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(510,145)">
+        <rect width="210" height="150" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">holdings</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">id · uuid PK</text>
+          <text x="12" y="59">portfolio_id · FK</text>
+          <text x="12" y="75">coin_id · FK</text>
+          <text x="12" y="91">quantity · numeric(36,18)</text>
+          <text x="12" y="107">avg_buy_price · numeric(24,8)</text>
+          <text x="12" y="123">note · created_at</text>
+          <text x="12" y="139" fill-opacity=".7">UQ (portfolio_id, coin_id)</text>
+        </g>
+      </g>
+
+      <g transform="translate(260,20)">
+        <rect width="210" height="175" rx="8" fill="none" stroke="#2B50E0" stroke-opacity=".75"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="#2B50E0">alerts</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">id · uuid PK</text>
+          <text x="12" y="59">user_id · FK</text>
+          <text x="12" y="75">coin_id · FK</text>
+          <text x="12" y="91">kind · enum ×4</text>
+          <text x="12" y="107">threshold · numeric(24,8)</text>
+          <text x="12" y="123">window_minutes · int</text>
+          <text x="12" y="139">status · cooldown_minutes</text>
+          <text x="12" y="155">is_one_shot · last_triggered_at</text>
+          <text x="12" y="171" fill-opacity=".65">IX (status, coin_id)</text>
+        </g>
+      </g>
+
+      <g transform="translate(260,220)">
+        <rect width="210" height="150" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="210" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">alert_events</text>
+        <text x="200" y="18" font-size="9" text-anchor="end" fill="currentColor" fill-opacity=".55">OUTBOX</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="43">id · uuid PK</text>
+          <text x="12" y="59">alert_id · FK</text>
+          <text x="12" y="75">triggered_at · price_at_trigger</text>
+          <text x="12" y="91">delivery_state · enum ×4</text>
+          <text x="12" y="107">attempts · next_retry_at</text>
+          <text x="12" y="123">telegram_message_id · error</text>
+          <text x="12" y="139" fill-opacity=".7">UQ (alert_id, dedupe_bucket)</text>
+        </g>
+      </g>
+
+      <g transform="translate(260,440)">
+        <rect width="460" height="100" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="460" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">coins</text>
+        <text x="448" y="18" font-size="9" text-anchor="end" fill="currentColor" fill-opacity=".55">TOP 50 + هر ارز مرجع کاربر</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="45">id · text PK · coingecko id</text>
+          <text x="12" y="61">symbol · name</text>
+          <text x="12" y="77">image_url</text>
+          <text x="240" y="45">market_cap_rank · int</text>
+          <text x="240" y="61">sparkline_7d · jsonb</text>
+          <text x="240" y="77">is_tracked · updated_at</text>
+        </g>
+      </g>
+
+      <g transform="translate(260,580)">
+        <rect width="220" height="100" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="220" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">price_snapshots</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="45">coin_id · FK</text>
+          <text x="12" y="61">ts · price_usd · volume</text>
+          <text x="12" y="77">market_cap · pct_change_24h</text>
+          <text x="12" y="93" fill-opacity=".7">PK (coin_id, ts) · هر ۵ دقیقه</text>
+        </g>
+      </g>
+
+      <g transform="translate(500,580)">
+        <rect width="220" height="100" rx="8" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+        <line x1="0" y1="26" x2="220" y2="26" stroke="currentColor" stroke-opacity=".3"/>
+        <text x="12" y="18" font-size="12" fill="currentColor">ohlc_candles</text>
+        <g fill="currentColor" fill-opacity=".8">
+          <text x="12" y="45">coin_id · FK</text>
+          <text x="12" y="61">interval · 1h | 1d</text>
+          <text x="12" y="77">ts · open · high · low · close</text>
+          <text x="12" y="93" fill-opacity=".7">PK (coin_id, interval, ts)</text>
+        </g>
+      </g>
+
+      <g fill="none" stroke="currentColor" stroke-opacity=".55" marker-end="url(#a4)">
+        <line x1="758" y1="70" x2="724" y2="70"/>
+        <line x1="865" y1="180" x2="865" y2="197"/>
+        <polyline points="962,180 990,180 990,355 973,355"/>
+        <polyline points="990,355 990,487 973,487"/>
+        <polyline points="990,487 990,610 973,610"/>
+        <polyline points="800,20 800,8 365,8 365,17"/>
+        <line x1="615" y1="120" x2="615" y2="142"/>
+        <line x1="615" y1="295" x2="615" y2="437"/>
+        <line x1="365" y1="195" x2="365" y2="217"/>
+        <polyline points="258,100 240,100 240,470 257,470"/>
+        <line x1="365" y1="540" x2="365" y2="577"/>
+        <line x1="615" y1="540" x2="615" y2="577"/>
+      </g>
+      <g fill="currentColor" fill-opacity=".75" font-size="9.5">
+        <text x="729" y="64">1..N</text>
+        <text x="870" y="193">1..N</text>
+        <text x="994" y="270" text-anchor="middle" transform="rotate(90,994,270)">1..N</text>
+        <text x="372" y="4">1..N</text>
+        <text x="620" y="136">1..N</text>
+        <text x="620" y="400">N..1</text>
+        <text x="372" y="211">1..N</text>
+        <text x="245" y="300" transform="rotate(90,245,300)">N..1</text>
+        <text x="372" y="570">1..N</text>
+        <text x="622" y="570">1..N</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>جدول <code>alerts</code> مرکز منطق دامنه است و <code>alert_events</code> و <code>email_outbox</code> نقش صندوق خروجی را بازی می‌کنند: تا زمانی که پیام تلگرام یا ایمیل تایید با موفقیت تحویل نشود، رکورد آن در حالت تحویل‌نشده باقی می‌ماند. دفتر تراکنش (<code>transactions</code>) به فاز ۲ منتقل شد؛ در نسخه ۱ هر دارایی با مقدار و میانگین قیمت خرید نگه داشته می‌شود.</figcaption>
+  </figure>
+
+  <div class="grid3" style="margin-top:14px">
+    <div class="card flat"><h4>ایندکس‌های حیاتی</h4><p style="font-size:13px">ارزیاب هشدار در هر دوره فقط <code>WHERE status='active'</code> را با ایندکس ترکیبی <code>(status, coin_id)</code> می‌خواند؛ نمودار از <code>(coin_id, interval, ts DESC)</code> و کارگر ارسال از ایندکس جزئی روی رویدادهای تحویل‌نشده استفاده می‌کند.</p></div>
+    <div class="card flat"><h4>پارتیشن و نگهداشت</h4><p style="font-size:13px"><code>price_snapshots</code> و <code>ohlc_candles</code> ماهانه پارتیشن می‌شوند؛ سیاست نگهداشت پیش‌فرض: تیک ۵ دقیقه‌ای ۹۰ روز، کندل ساعتی ۲ سال، کندل روزانه بی‌نهایت.</p></div>
+    <div class="card flat"><h4>مهاجرت‌ها</h4><p style="font-size:13px">Alembic با یک مهاجرت به‌ازای هر گام نقشه راه؛ هیچ <code>create_all</code> در کد اجرایی نیست تا محیط توسعه و تولید هرگز از هم جدا نشوند.</p></div>
+  </div>
+</section>
+
+<section id="api">
+  <div class="s-head"><span class="eyebrow">API contract</span><span class="rule"></span><h2>قرارداد API — نسخه v1</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">همه مسیرها زیر <code>/api/v1</code>، همه پاسخ‌ها با اسکیمای Pydantic تایپ‌شده، خطاها با ساختار یکسان <code>{code, message, details}</code>. مستندات خودکار روی <code>/docs</code>.</p>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>روش</th><th class="mono">مسیر</th><th>کار</th><th>دسترسی</th></tr></thead>
+      <tbody>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/register</td><td>ثبت‌نام با ایمیل و رمز</td><td>عمومی</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/login</td><td>توکن دسترسی + کوکی تازه‌سازی<small>حساب تاییدنشده خطای <code>email_not_verified</code> با کنش ارسال دوباره می‌گیرد</small></td><td>عمومی · محدود به ۵ تلاش در دقیقه</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/refresh</td><td>چرخش توکن تازه‌سازی</td><td>کوکی</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/logout</td><td>ابطال توکن تازه‌سازی</td><td>کاربر</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/auth/me</td><td>پروفایل، وضعیت تایید ایمیل و اتصال تلگرام</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/verify/{token}</td><td>تایید ایمیل<small>توکن ۲۴ ساعته، یک‌بارمصرف، هش‌شده در دیتابیس</small></td><td>عمومی</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/verify/resend</td><td>ارسال دوباره ایمیل تایید</td><td>عمومی · ۳ بار در ساعت</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/password/forgot</td><td>ارسال لینک بازیابی رمز<small>پاسخ همیشه یکسان است تا وجود یا نبود ایمیل لو نرود</small></td><td>عمومی · ۳ بار در ساعت</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/auth/password/reset</td><td>تعیین رمز جدید + ابطال همه نشست‌ها</td><td>عمومی با توکن</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/market/coins?limit=50&amp;sort=rank</td><td>فهرست ۵۰ ارز برتر از کش<small>قیمت، تغییر ۲۴ ساعته، حجم، ارزش بازار، اسپارک‌لاین ۷ روزه</small></td><td>عمومی</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/market/coins/{coin_id}</td><td>جزئیات یک ارز + آمار کلیدی</td><td>عمومی</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/market/coins/{coin_id}/chart?range=24h|7d|30d|90d|1y</td><td>سری زمانی نمودار از کندل‌ها</td><td>عمومی · کش ۶۰ ثانیه</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/market/search?q=</td><td>جستجوی نام و نماد</td><td>عمومی</td></tr>
+        <tr><td><span class="m-ws">SSE</span></td><td class="mono">/market/stream</td><td>جریان قیمت زنده برای ارزهای در دید کاربر</td><td>عمومی</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/portfolio/summary</td><td>ارزش کل، سود/زیان، تخصیص درصدی</td><td>کاربر</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/portfolio/holdings</td><td>فهرست دارایی‌ها با ارزش لحظه‌ای</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/portfolio/holdings</td><td>افزودن ارز به سبد</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">PATCH</span></td><td class="mono">/portfolio/holdings/{id}</td><td>ویرایش مقدار یا میانگین خرید</td><td>کاربر</td></tr>
+        <tr><td><span class="m-del">DELETE</span></td><td class="mono">/portfolio/holdings/{id}</td><td>حذف از سبد</td><td>کاربر</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/alerts</td><td>هشدارها با فیلتر وضعیت</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/alerts</td><td>ساخت هشدار<small>اعتبارسنجی: آستانه بالا باید بیشتر از قیمت فعلی و آستانه پایین کمتر از آن باشد</small></td><td>کاربر · سقف ۵۰ فعال</td></tr>
+        <tr><td><span class="m-post">PATCH</span></td><td class="mono">/alerts/{id}</td><td>ویرایش، توقف، فعال‌سازی مجدد</td><td>کاربر</td></tr>
+        <tr><td><span class="m-del">DELETE</span></td><td class="mono">/alerts/{id}</td><td>حذف هشدار</td><td>کاربر</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/alerts/events?limit=50</td><td>تاریخچه فعال‌شدن‌ها و وضعیت تحویل</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/telegram/link</td><td>ساخت لینک یک‌بارمصرف <code>t.me/&lt;bot&gt;?start=&lt;token&gt;</code></td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/telegram/test</td><td>ارسال پیام آزمایشی</td><td>کاربر</td></tr>
+        <tr><td><span class="m-del">DELETE</span></td><td class="mono">/telegram/link</td><td>قطع اتصال تلگرام</td><td>کاربر</td></tr>
+        <tr><td><span class="m-post">POST</span></td><td class="mono">/telegram/webhook/{secret}</td><td>دریافت به‌روزرسانی‌های ربات</td><td>فقط تلگرام · با توکن مخفی در مسیر</td></tr>
+        <tr><td><span class="m-get">GET</span></td><td class="mono">/health</td><td>وضعیت دیتابیس، Redis و تازگی جریان قیمت</td><td>عمومی</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="jobs">
+  <div class="s-head"><span class="eyebrow">Workers</span><span class="rule"></span><h2>کارگرهای پس‌زمینه و بودجه نرخ</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th class="mono">کار</th><th>دوره</th><th>چه می‌کند</th><th>هزینه نرخ بیرونی</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">market_poll</td><td>۵ دقیقه</td><td>یک فراخوان <code>/coins/markets</code>؛ قیمت ۵۰ ارز را در Redis می‌نویسد، روی کانال <code>prices</code> منتشر می‌کند و یک عکس لحظه‌ای در <code>price_snapshots</code> ثبت می‌کند. خطا یا سقف نرخ: تلاش مجدد با فاصله فزاینده و نگه‌داشتن آخرین مقدار سالم.</td><td class="mono">≈ 8,640 / ماه</td></tr>
+        <tr><td class="mono">candle_aggregator</td><td>۵ دقیقه</td><td>از عکس‌های لحظه‌ای، کندل جاری <code>1h</code> و <code>1d</code> را می‌سازد و می‌بندد.</td><td>صفر</td></tr>
+        <tr><td class="mono">chart_backfill</td><td>یک‌بار برای هر ارز تازه‌وارد</td><td>تاریخچه یک‌ساله را از <code>market_chart</code> می‌گیرد تا نمودار از روز اول پر باشد.</td><td class="mono">≈ 120 / ماه</td></tr>
+        <tr><td class="mono">alert_evaluator</td><td>با هر به‌روزرسانی قیمت</td><td>هشدارهای فعال را گروه‌بندی‌شده بر پایه ارز می‌خواند و عبور از آستانه را با مقایسه نمونه قبلی و فعلی تشخیص می‌دهد.</td><td>صفر</td></tr>
+        <tr><td class="mono">telegram_sender</td><td>پیوسته</td><td>رویدادهای تحویل‌نشده را برمی‌دارد؛ تلاش مجدد ۵s / 30s / 5m / 30m و رعایت سقف ۳۰ پیام در ثانیه تلگرام.</td><td>یک درخواست به‌ازای هر هشدار</td></tr>
+        <tr><td class="mono">email_sender</td><td>پیوسته</td><td>ایمیل تایید حساب و بازیابی رمز را از <code>email_outbox</code> با همان الگوی تلاش مجدد می‌فرستد.</td><td>سهم SMTP</td></tr>
+        <tr><td class="mono">coin_list_sync</td><td>روزانه</td><td>ترکیب ۵۰ ارز برتر را به‌روز می‌کند و ارز تازه‌وارد را برای <code>chart_backfill</code> علامت می‌زند.</td><td class="mono">≈ 30 / ماه</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prose" style="color:var(--ink2);font-size:13.5px;margin-top:12px">مجموع مصرف CoinGecko حدود <span class="num">۸٬۷۹۰</span> درخواست در ماه است و حدود <span class="num">۱٬۲۱۰</span> درخواست ذخیره برای تلاش مجدد و تازه‌وارد‌ها می‌ماند. تاخیر هشدار در بدترین حالت ۵ دقیقه به‌علاوه چند ثانیه ارسال تلگرام است. تنها متغیری که این عدد را عوض می‌کند <code>POLL_INTERVAL</code> است: ۳ دقیقه یعنی ۱۴٬۴۰۰ فراخوان و عبور از سقف رایگان، پس تغییرش فقط با سهم پولی مجاز است.</p>
+</section>
+
+<section id="ui">
+  <div class="s-head"><span class="eyebrow">Interface</span><span class="rule"></span><h2>طراحی رابط کاربری</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">پنج صفحه اصلی. ظاهر پیشنهادی: چیدمان راست‌به‌چپ فارسی، ستون کناری ثابت برای ناوبری، اعداد همیشه لاتین با فاصله ثابت رقم‌ها تا ستون‌ها تکان نخورند. سبز و قرمز فقط معنای بازار دارند و آبی رنگ کنش‌های سیستم است؛ کهربایی مخصوص هرچیزی است که به هشدار مربوط می‌شود.</p>
+  </div>
+
+  <div class="grid3" style="margin-bottom:26px">
+    <div class="card flat"><h4>توکن رنگ</h4><dl class="kv" style="margin-top:8px">
+      <dt>accent</dt><dd>آبی — دکمه، لینک، حالت انتخاب</dd>
+      <dt>up / down</dt><dd>سبز و قرمز — فقط جهت بازار</dd>
+      <dt>signal</dt><dd>کهربایی — هشدار و آستانه روی نمودار</dd>
+      <dt>surface</dt><dd>خنثای متمایل به آبی، دو تراز روشنایی</dd>
+    </dl></div>
+    <div class="card flat"><h4>قلم</h4><dl class="kv" style="margin-top:8px">
+      <dt>UI</dt><dd>IBM Plex Sans Arabic — وزن ۴۰۰ برای متن، ۶۰۰ برای عنوان</dd>
+      <dt>DATA</dt><dd>IBM Plex Mono — قیمت، نماد، درصد، برچسب ستون</dd>
+      <dt>NUM</dt><dd><code>tabular-nums</code> در همه اعداد جدولی</dd>
+    </dl></div>
+    <div class="card flat"><h4>حالت‌ها</h4><dl class="kv" style="margin-top:8px">
+      <dt>THEME</dt><dd>روشن و تاریک، پیرو تنظیم سیستم با کلید دستی</dd>
+      <dt>EMPTY</dt><dd>هر جدول خالی یک کنش پیشنهادی دارد، نه فقط پیام</dd>
+      <dt>LIVE</dt><dd>تغییر قیمت با یک تپش کوتاه پس‌زمینه، بدون پرش چیدمان</dd>
+    </dl></div>
+  </div>
+
+  <div class="stack" style="gap:30px">
+
+    <div>
+      <div class="mock-label"><b>۱ — بازار</b><span>صفحه فرود؛ ۵۰ ارز برتر، به‌روزرسانی زنده بدون بارگذاری مجدد</span></div>
+      <div class="wf">
+        <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/market</span></div>
+        <div class="app">
+          <aside class="side">
+            <div class="logo"><span class="mark">CP</span>کوین‌پالس</div>
+            <a href="#ui" class="on">◉ بازار</a>
+            <a href="#ui">◈ سبد من</a>
+            <a href="#ui">◔ هشدارها</a>
+            <a href="#ui">⚙ تنظیمات</a>
+            <div class="sep">تلگرام: متصل ✓</div>
+          </aside>
+          <div class="main">
+            <div class="bar">
+              <span class="h-t">بازار ارزهای دیجیتال</span>
+              <span class="search">جستجوی نام یا نماد…</span>
+              <span class="pill p-on"><span class="dot"></span>قیمت ۲ دقیقه پیش · تازه‌سازی هر ۵ دقیقه</span>
+            </div>
+            <table class="mini">
+              <thead><tr><th>#</th><th>ارز</th><th style="text-align:left">قیمت</th><th style="text-align:left">۲۴ ساعت</th><th style="text-align:left">۷ روز</th><th style="text-align:left">ارزش بازار</th><th></th></tr></thead>
+              <tbody>
+                <tr><td class="n">1</td>
+                  <td><span class="coin"><span class="ic" style="background:#F7931A">₿</span><b>بیت‌کوین</b><span>BTC</span></span></td>
+                  <td class="n">$104,318.42</td><td class="n up">+2.14%</td>
+                  <td><svg width="62" height="18" viewBox="0 0 62 18" aria-hidden="true"><polyline points="0,13 9,14 18,10 27,12 36,7 45,8 54,4 62,2" fill="none" stroke="#0F8A5F" stroke-width="1.5"/></svg></td>
+                  <td class="n">$2.06T</td><td><span class="bell">◔</span></td></tr>
+                <tr><td class="n">2</td>
+                  <td><span class="coin"><span class="ic" style="background:#627EEA">Ξ</span><b>اتریوم</b><span>ETH</span></span></td>
+                  <td class="n">$3,842.07</td><td class="n up">+1.08%</td>
+                  <td><svg width="62" height="18" viewBox="0 0 62 18" aria-hidden="true"><polyline points="0,11 9,9 18,12 27,8 36,9 45,6 54,7 62,5" fill="none" stroke="#0F8A5F" stroke-width="1.5"/></svg></td>
+                  <td class="n">$462.8B</td><td><span class="bell" style="border-color:#E3A93C;color:#9C5A00">◉</span></td></tr>
+                <tr><td class="n">3</td>
+                  <td><span class="coin"><span class="ic" style="background:#00A3FF">S</span><b>سولانا</b><span>SOL</span></span></td>
+                  <td class="n">$186.55</td><td class="n down">−4.62%</td>
+                  <td><svg width="62" height="18" viewBox="0 0 62 18" aria-hidden="true"><polyline points="0,5 9,4 18,7 27,6 36,10 45,9 54,13 62,15" fill="none" stroke="#C9312B" stroke-width="1.5"/></svg></td>
+                  <td class="n">$88.1B</td><td><span class="bell">◔</span></td></tr>
+                <tr><td class="n">4</td>
+                  <td><span class="coin"><span class="ic" style="background:#23292F">◇</span><b>ریپل</b><span>XRP</span></span></td>
+                  <td class="n">$2.4188</td><td class="n down">−0.31%</td>
+                  <td><svg width="62" height="18" viewBox="0 0 62 18" aria-hidden="true"><polyline points="0,8 9,7 18,9 27,8 36,11 45,10 54,9 62,10" fill="none" stroke="#C9312B" stroke-width="1.5"/></svg></td>
+                  <td class="n">$139.4B</td><td><span class="bell">◔</span></td></tr>
+                <tr><td class="n">5</td>
+                  <td><span class="coin"><span class="ic" style="background:#F0B90B;color:#1c1c1c">B</span><b>بایننس کوین</b><span>BNB</span></span></td>
+                  <td class="n">$712.90</td><td class="n up">+0.74%</td>
+                  <td><svg width="62" height="18" viewBox="0 0 62 18" aria-hidden="true"><polyline points="0,12 9,11 18,11 27,9 36,10 45,7 54,8 62,6" fill="none" stroke="#0F8A5F" stroke-width="1.5"/></svg></td>
+                  <td class="n">$103.2B</td><td><span class="bell">◔</span></td></tr>
+              </tbody>
+            </table>
+            <div style="font-size:11.5px;color:var(--ink3)">۵۰ ردیف · کلیک روی ردیف صفحه ارز را باز می‌کند · آیکن زنگ هشدار سریع می‌سازد؛ زنگ کهربایی یعنی هشدار فعال دارید</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mock-label"><b>۲ — صفحه ارز</b><span>نمودار تعاملی با خطوط آستانه هشدار روی همان نمودار</span></div>
+      <div class="wf">
+        <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/coin/bitcoin</span></div>
+        <div class="app">
+          <aside class="side">
+            <div class="logo"><span class="mark">CP</span>کوین‌پالس</div>
+            <a href="#ui" class="on">◉ بازار</a><a href="#ui">◈ سبد من</a><a href="#ui">◔ هشدارها</a><a href="#ui">⚙ تنظیمات</a>
+            <div class="sep">تلگرام: متصل ✓</div>
+          </aside>
+          <div class="main">
+            <div class="bar">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="coin"><span class="ic" style="background:#F7931A;width:26px;height:26px;font-size:12px">₿</span><b style="font-size:16px">بیت‌کوین</b><span>BTC · رتبه ۱</span></span>
+                <span class="n" style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;direction:ltr">$104,318.42</span>
+                <span class="pill p-on">+2.14% · ۲۴ ساعت</span>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn ghost">افزودن به سبد</button>
+                <button class="btn">ساخت هشدار</button>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="ranges"><span>24h</span><span class="on">7d</span><span>30d</span><span>90d</span><span>1y</span></div>
+              <span style="font-size:11px;color:var(--ink3)">خط‌چین کهربایی = آستانه‌های هشدار شما</span>
+            </div>
+            <div style="border:1px solid var(--line);border-radius:9px;padding:10px;background:var(--surface2)">
+              <svg viewBox="0 0 620 180" style="display:block;width:100%;height:auto" role="img" aria-label="نمودار قیمت هفت روزه بیت‌کوین با دو خط‌چین آستانه هشدار در ۱۱۰ و ۹۵ هزار دلار">
+                <g stroke="currentColor" stroke-opacity=".12"><line x1="40" y1="20" x2="610" y2="20"/><line x1="40" y1="60" x2="610" y2="60"/><line x1="40" y1="100" x2="610" y2="100"/><line x1="40" y1="140" x2="610" y2="140"/></g>
+                <g font-family="IBM Plex Mono, monospace" font-size="9" fill="currentColor" fill-opacity=".5" text-anchor="end">
+                  <text x="34" y="23">112k</text><text x="34" y="63">106k</text><text x="34" y="103">100k</text><text x="34" y="143">94k</text>
+                </g>
+                <defs><linearGradient id="ar1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B50E0" stop-opacity=".22"/><stop offset="1" stop-color="#2B50E0" stop-opacity="0"/></linearGradient></defs>
+                <path d="M40,120 L96,126 L152,104 L208,112 L264,88 L320,96 L376,70 L432,78 L488,54 L544,62 L600,44 L600,165 L40,165 Z" fill="url(#ar1)"/>
+                <polyline points="40,120 96,126 152,104 208,112 264,88 320,96 376,70 432,78 488,54 544,62 600,44" fill="none" stroke="#2B50E0" stroke-width="1.8"/>
+                <circle cx="600" cy="44" r="3.5" fill="#2B50E0"/>
+                <line x1="40" y1="34" x2="610" y2="34" stroke="#E3A93C" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <text x="606" y="30" font-family="IBM Plex Mono, monospace" font-size="9" fill="#9C5A00" text-anchor="end">حد سود · 110,000</text>
+                <line x1="40" y1="150" x2="610" y2="150" stroke="#E3A93C" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <text x="606" y="162" font-family="IBM Plex Mono, monospace" font-size="9" fill="#9C5A00" text-anchor="end">حد ضرر · 95,000</text>
+              </svg>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+              <div class="tile"><span class="lbl">ارزش بازار</span><span class="val">$2.06T</span></div>
+              <div class="tile"><span class="lbl">حجم ۲۴ ساعت</span><span class="val">$41.7B</span></div>
+              <div class="tile"><span class="lbl">سقف تاریخی</span><span class="val">$126,198</span><span class="sub down">−17.3%</span></div>
+              <div class="tile"><span class="lbl">دارایی شما</span><span class="val">0.4120</span><span class="sub up">$42,979 · +18.4%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mock-label"><b>۳ — سبد من</b><span>ارزش کل، سود و زیان، تخصیص و ردیف‌های دارایی</span></div>
+      <div class="wf">
+        <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/portfolio</span></div>
+        <div class="app">
+          <aside class="side">
+            <div class="logo"><span class="mark">CP</span>کوین‌پالس</div>
+            <a href="#ui">◉ بازار</a><a href="#ui" class="on">◈ سبد من</a><a href="#ui">◔ هشدارها</a><a href="#ui">⚙ تنظیمات</a>
+            <div class="sep">تلگرام: متصل ✓</div>
+          </aside>
+          <div class="main">
+            <div class="bar"><span class="h-t">سبد من</span><button class="btn">افزودن دارایی</button></div>
+            <div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1.2fr;gap:10px">
+              <div class="tile"><span class="lbl">ارزش کل</span><span class="val">$58,204.11</span><span class="sub up">+$1,204.66 امروز</span></div>
+              <div class="tile"><span class="lbl">سود / زیان کل</span><span class="val up">+$9,881.40</span><span class="sub up">+20.4%</span></div>
+              <div class="tile"><span class="lbl">بهای تمام‌شده</span><span class="val">$48,322.71</span></div>
+              <div class="tile" style="align-items:center;flex-direction:row;gap:12px">
+                <svg width="58" height="58" viewBox="0 0 42 42" role="img" aria-label="سهم هر ارز از سبد: بیت‌کوین ۷۴ درصد، اتریوم ۱۹ درصد، سولانا ۷ درصد">
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#F7931A" stroke-width="7" stroke-dasharray="74 26" stroke-dashoffset="25"/>
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#627EEA" stroke-width="7" stroke-dasharray="19 81" stroke-dashoffset="-49"/>
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#00A3FF" stroke-width="7" stroke-dasharray="7 93" stroke-dashoffset="-68"/>
+                </svg>
+                <div style="display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--ink2)">
+                  <span>● BTC ۷۴٪</span><span style="color:var(--ink3)">● ETH ۱۹٪</span><span style="color:var(--ink3)">● SOL ۷٪</span>
+                </div>
+              </div>
+            </div>
+            <table class="mini">
+              <thead><tr><th>ارز</th><th style="text-align:left">مقدار</th><th style="text-align:left">میانگین خرید</th><th style="text-align:left">قیمت روز</th><th style="text-align:left">ارزش</th><th style="text-align:left">سود / زیان</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><span class="coin"><span class="ic" style="background:#F7931A">₿</span><b>BTC</b></span></td>
+                  <td class="n">0.41200000</td><td class="n">$88,900.00</td><td class="n">$104,318.42</td><td class="n">$42,979.19</td><td class="n up">+$6,352.20 · +17.3%</td><td><span class="bell">⋯</span></td></tr>
+                <tr><td><span class="coin"><span class="ic" style="background:#627EEA">Ξ</span><b>ETH</b></span></td>
+                  <td class="n">2.90000000</td><td class="n">$2,760.00</td><td class="n">$3,842.07</td><td class="n">$11,142.00</td><td class="n up">+$3,138.00 · +39.2%</td><td><span class="bell">⋯</span></td></tr>
+                <tr><td><span class="coin"><span class="ic" style="background:#00A3FF">S</span><b>SOL</b></span></td>
+                  <td class="n">22.00000000</td><td class="n">$204.00</td><td class="n">$186.55</td><td class="n">$4,104.10</td><td class="n down">−$383.90 · −8.5%</td><td><span class="bell">⋯</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mock-label"><b>۴ — هشدارها</b><span>فهرست هشدارها در سمت راست، فرم ساخت در سمت چپ</span></div>
+      <div class="wf">
+        <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/alerts</span></div>
+        <div class="app">
+          <aside class="side">
+            <div class="logo"><span class="mark">CP</span>کوین‌پالس</div>
+            <a href="#ui">◉ بازار</a><a href="#ui">◈ سبد من</a><a href="#ui" class="on">◔ هشدارها</a><a href="#ui">⚙ تنظیمات</a>
+            <div class="sep">تلگرام: متصل ✓</div>
+          </aside>
+          <div class="main">
+            <div class="bar"><span class="h-t">هشدارهای من <span style="color:var(--ink3);font-weight:400;font-size:12px">۴ فعال از ۵۰</span></span><button class="btn">هشدار جدید</button></div>
+            <div style="display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start">
+              <table class="mini">
+                <thead><tr><th>ارز</th><th>شرط</th><th style="text-align:left">آستانه</th><th style="text-align:left">قیمت فعلی</th><th>وضعیت</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="coin"><span class="ic" style="background:#F7931A">₿</span><b>BTC</b></span></td><td>بالاتر از</td><td class="n">$110,000</td><td class="n">$104,318</td><td><span class="pill p-on">فعال</span></td></tr>
+                  <tr><td><span class="coin"><span class="ic" style="background:#F7931A">₿</span><b>BTC</b></span></td><td>پایین‌تر از</td><td class="n">$95,000</td><td class="n">$104,318</td><td><span class="pill p-on">فعال</span></td></tr>
+                  <tr><td><span class="coin"><span class="ic" style="background:#00A3FF">S</span><b>SOL</b></span></td><td>ریزش در ۱۵ دقیقه</td><td class="n">−5%</td><td class="n down">−6.2%</td><td><span class="pill p-fire">اکنون ارسال شد</span></td></tr>
+                  <tr><td><span class="coin"><span class="ic" style="background:#627EEA">Ξ</span><b>ETH</b></span></td><td>بالاتر از</td><td class="n">$4,000</td><td class="n">$3,842</td><td><span class="pill p-on">فعال</span></td></tr>
+                  <tr><td><span class="coin"><span class="ic" style="background:#F0B90B;color:#1c1c1c">B</span><b>BNB</b></span></td><td>پایین‌تر از</td><td class="n">$650</td><td class="n">$712</td><td><span class="pill p-off">متوقف</span></td></tr>
+                </tbody>
+              </table>
+              <div class="modal">
+                <b style="font-size:13.5px">هشدار جدید</b>
+                <div class="field"><label>ارز</label><div class="inp">bitcoin — BTC</div></div>
+                <div class="field"><label>نوع شرط</label><div class="seg"><i class="on">حد بالا</i><i>حد پایین</i><i>درصد</i></div></div>
+                <div class="field"><label>آستانه قیمت — قیمت فعلی 104,318.42</label><div class="inp">110000</div></div>
+                <div class="field"><label>مهلت سکوت بعد از فعال شدن</label><div class="inp">60 دقیقه</div></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)"><span style="width:28px;height:16px;border-radius:9px;background:var(--accent);position:relative;display:inline-block"><span style="position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;top:2px;left:2px"></span></span>بعد از اولین فعال‌شدن خودکار متوقف شود</div>
+                <div style="display:flex;gap:8px"><button class="btn" style="flex:1">ثبت هشدار</button><button class="btn ghost">انصراف</button></div>
+                <div style="font-size:11px;color:var(--ink3);border-top:1px solid var(--line);padding-top:8px">پیام روی تلگرام <b class="mono" dir="ltr">@vahid</b> ارسال می‌شود.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mock-label"><b>۵ — اتصال تلگرام و شکل پیام</b><span>سه گام اتصال و نمونه اخطاری که کاربر می‌گیرد</span></div>
+      <div class="grid2" style="align-items:start">
+        <div class="wf">
+          <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/settings/telegram</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+            <span class="h-t">اتصال به تلگرام</span>
+            <ol class="steps" style="gap:12px">
+              <li><div><h4>لینک اختصاصی را بگیرید</h4><p>یک توکن یک‌بارمصرف با اعتبار ۱۰ دقیقه ساخته می‌شود.</p></div></li>
+              <li><div><h4>دکمه را بزنید</h4><p style="margin-bottom:8px">تلگرام با دستور <code>/start</code> باز می‌شود و ربات حساب شما را می‌شناسد.</p><button class="btn">باز کردن <span class="mono" dir="ltr">@CoinPulseBot</span></button></div></li>
+              <li><div><h4>پیام آزمایشی</h4><p>یک اخطار نمونه می‌فرستیم تا مطمئن شوید مسیر کار می‌کند.</p></div></li>
+            </ol>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding-top:12px;border-top:1px solid var(--line)">
+              <span class="pill p-on">متصل</span><span style="color:var(--ink2)">آخرین پیام موفق: امروز ۱۴:۰۲</span>
+            </div>
+          </div>
+        </div>
+        <div class="tg">
+          <span class="who">CoinPulseBot</span>
+          <div class="bub"><span class="ttl">◔ ریزش ناگهانی — SOL</span>
+            سولانا در ۱۵ دقیقه <span class="n">۶.۲٪</span> افت کرد.<br>
+            قیمت فعلی: <span class="n">$186.55</span><br>
+            آستانه شما: <span class="n">−۵٪</span><br>
+            دارایی شما: <span class="n">22 SOL · $4,104</span>
+            <div class="btns"><i>مشاهده نمودار</i><i>سکوت ۴ ساعت</i></div>
+          </div>
+          <div class="bub"><span class="ttl">◔ حد سود — BTC</span>
+            بیت‌کوین از <span class="n">$110,000</span> عبور کرد.<br>
+            قیمت فعلی: <span class="n">$110,412.80</span><br>
+            سود دارایی شما: <span class="n">+$8,862 · +20.7%</span>
+            <div class="btns"><i>مشاهده نمودار</i><i>غیرفعال کردن هشدار</i></div>
+          </div>
+          <span class="who">هر پیام دکمه‌های عملیاتی دارد؛ «سکوت» و «غیرفعال کردن» از همان‌جا روی هشدار اثر می‌گذارند.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div>
+      <div class="mock-label"><b>۶ — ثبت‌نام و تایید ایمیل</b><span>حساب تاییدنشده وارد نمی‌شود؛ ایمیل تنها برای تایید و بازیابی رمز است</span></div>
+      <div class="grid2" style="align-items:start">
+        <div class="wf">
+          <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/register</span></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px;max-width:360px">
+            <div class="logo" style="padding:0 0 4px"><span class="mark">CP</span>ساخت حساب</div>
+            <div class="field"><label>ایمیل</label><div class="inp">vahid@example.com</div></div>
+            <div class="field"><label>رمز عبور — حداقل ۱۰ نویسه</label><div class="inp">••••••••••</div>
+              <div style="display:flex;gap:3px;margin-top:2px"><span style="height:3px;flex:1;background:var(--up);border-radius:2px"></span><span style="height:3px;flex:1;background:var(--up);border-radius:2px"></span><span style="height:3px;flex:1;background:var(--up);border-radius:2px"></span><span style="height:3px;flex:1;background:var(--line2);border-radius:2px"></span></div>
+            </div>
+            <button class="btn">ثبت‌نام</button>
+            <div style="font-size:11.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:10px">یک ایمیل تایید با اعتبار ۲۴ ساعت برایتان می‌فرستیم. تا تایید نشود، ورود ممکن نیست.</div>
+          </div>
+        </div>
+        <div class="wf">
+          <div class="wf-bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="url">coinpulse.app/verify-pending</span></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
+            <span class="pill p-fire" style="align-self:flex-start">در انتظار تایید ایمیل</span>
+            <span class="h-t">ایمیل خود را باز کنید</span>
+            <p style="font-size:13.5px;color:var(--ink2);margin:0">لینک تایید به <b class="mono" dir="ltr">vahid@example.com</b> فرستاده شد. اگر نرسید، پوشه هرزنامه را ببینید یا دوباره درخواست کنید.</p>
+            <div style="display:flex;gap:8px"><button class="btn ghost">ارسال دوباره</button><button class="btn ghost">تغییر ایمیل</button></div>
+            <div style="font-size:11.5px;color:var(--ink3)">سقف ارسال دوباره: ۳ بار در ساعت.</div>
+            <div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11.5px;color:var(--ink3)">پیش‌نمایش ایمیل ارسالی</span>
+              <div style="border:1px solid var(--line);border-radius:9px;padding:12px;background:var(--surface2);font-size:12.5px;color:var(--ink2);line-height:1.9">
+                <b style="color:var(--ink)">تایید حساب کوین‌پالس</b><br>
+                برای فعال شدن حساب، روی دکمه زیر بزنید. این لینک ۲۴ ساعت اعتبار دارد و یک‌بار مصرف است.<br>
+                <span style="display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:600">تایید ایمیل</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="repo">
+  <div class="s-head"><span class="eyebrow">Repository</span><span class="rule"></span><h2>ساختار مخزن</h2></div>
+  <pre>crypto_portfolio/
+├─ <b>CLAUDE.md</b>                 <i># قوانین مخزن — اول PROJECT_STATE.md را بخوان</i>
+├─ docker-compose.yml         <i># api · worker · bot · postgres · redis · caddy</i>
+├─ Makefile                   <i># up / migrate / test / lint / seed</i>
+├─ docs/
+│  ├─ <b>PROJECT_STATE.md</b>       <i># حالت زنده پروژه — کم‌توکن، ماشین‌خوان</i>
+│  ├─ design/architecture.html <i># همین سند</i>
+│  └─ adr/0001-price-source.md <i># تصمیم‌های ثبت‌شده</i>
+├─ scripts/
+│  ├─ update_project_state.py  <i># به‌روزرسانی خودکار حالت پروژه</i>
+│  └─ install_hooks.sh
+├─ backend/
+│  ├─ pyproject.toml           <i># uv · ruff · mypy · pytest</i>
+│  ├─ alembic/versions/
+│  └─ app/
+│     ├─ main.py               <i># ساخت اپ، میان‌افزارها، روترها</i>
+│     ├─ core/                 <i># config · security · logging · deps</i>
+│     ├─ db/                   <i># session · base · مدل‌های SQLAlchemy</i>
+│     ├─ schemas/              <i># اسکیمای Pydantic — ورودی و خروجی</i>
+│     ├─ api/v1/               <i># auth · market · portfolio · alerts · telegram</i>
+│     ├─ services/             <i># منطق دامنه — بدون وابستگی به HTTP</i>
+│     │  ├─ price_source/      <i># interface + binance + coingecko</i>
+│     │  ├─ portfolio.py
+│     │  └─ alert_engine.py    <i># تشخیص عبور از آستانه — هسته تست‌پذیر</i>
+│     ├─ workers/              <i># تعریف کارگرها و زمان‌بندی ARQ</i>
+│     └─ bot/                  <i># هندلرهای aiogram و قالب پیام‌ها</i>
+├─ frontend/
+│  ├─ vite.config.ts
+│  └─ src/
+│     ├─ api/                  <i># کلاینت تایپ‌شده تولیدشده از OpenAPI</i>
+│     ├─ stores/               <i># auth · market · portfolio · alerts</i>
+│     ├─ components/           <i># CoinRow · PriceChart · AlertForm · Sparkline</i>
+│     ├─ views/                <i># Market · Coin · Portfolio · Alerts · Settings</i>
+│     └─ styles/tokens.css     <i># همان توکن‌های رنگ و قلم این سند</i>
+└─ .github/workflows/ci.yml    <i># ruff · mypy · pytest · vitest · build</i></pre>
+</section>
+
+<section id="roadmap">
+  <div class="s-head"><span class="eyebrow">Roadmap</span><span class="rule"></span><h2>نقشه راه پیاده‌سازی</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">ترتیب گام‌ها اجباری است: هر گام روی گام قبل سوار می‌شود و در پایان هر گام چیزی قابل اجرا و قابل دیدن تحویل داده می‌شود.</p>
+  </div>
+  <ol class="steps">
+    <li><div><h4>زیرساخت</h4><p>docker-compose با پنج سرویس، اسکلت FastAPI و Vue، Alembic، CI، فایل <code>PROJECT_STATE.md</code> و هوک گیت. تحویل: <code>make up</code> و بالا آمدن یک صفحه خالی و <code>/health</code> سبز.</p></div></li>
+    <li><div><h4>احراز هویت و ایمیل</h4><p>ثبت‌نام، تایید ایمیل با توکن یک‌بارمصرف، بازیابی رمز، چرخش توکن، صندوق خروجی ایمیل و کارگر ارسال، MailHog در محیط توسعه، صفحه‌های ورود و تایید و نگهبان مسیرها در فرانت.</p></div></li>
+    <li><div><h4>داده بازار</h4><p>جدول <code>coins</code>، کارگر جریان قیمت، کش Redis، اندپوینت فهرست و نمودار، صفحه بازار و صفحه ارز با ECharts. تحویل: هدف اول و دوم شما کامل می‌شود.</p></div></li>
+    <li><div><h4>سبد</h4><p>دارایی‌ها، محاسبه ارزش و سود و زیان، صفحه سبد با نمودار تخصیص.</p></div></li>
+    <li><div><h4>موتور هشدار</h4><p>مدل هشدار، ارزیاب با منطق عبور از آستانه و تست واحد سنگین روی همین هسته، صفحه هشدارها.</p></div></li>
+    <li><div><h4>تلگرام</h4><p>ربات aiogram، جریان اتصال با توکن یک‌بارمصرف، کارگر ارسال با تلاش مجدد، دکمه‌های عملیاتی روی پیام.</p></div></li>
+    <li><div><h4>سخت‌سازی و انتشار</h4><p>محدودیت نرخ، لاگ ساختاریافته، تست انتها‌به‌انتها روی مسیر «قیمت تا پیام تلگرام»، Caddy با HTTPS و راهنمای استقرار.</p></div></li>
+  </ol>
+</section>
+
+<section id="approve">
+  <div class="s-head"><span class="eyebrow">Sign-off</span><span class="rule"></span><h2>چیزی که برای شروع پیاده‌سازی لازم دارم</h2>
+    <p class="prose" style="color:var(--ink2);font-size:14px">پاسخ‌های شما اعمال شد و بقیه گزینه‌ها را خودم بستم. اگر با این نسخه موافقید، پیاده‌سازی از گام ۱ شروع می‌شود.</p>
+  </div>
+  <div class="stack">
+    <div class="card"><h3>تصمیم‌های قطعی‌شده — پاسخ‌های شما</h3>
+      <ul class="tick">
+        <li><b>منبع قیمت: CoinGecko.</b> نگرانی تاخیر را گفتم و شما همین را انتخاب کردید؛ معماری روی یک فراخوان هر ۵ دقیقه بسته شد و تاخیر هشدار تا ۵ دقیقه پذیرفته است.</li>
+        <li><b>تایید ایمیل: هست.</b> ثبت‌نام با توکن یک‌بارمصرف ۲۴ ساعته، ورود پیش از تایید مسدود، بازیابی رمز هم با همان زیرساخت. SMTP از متغیرهای محیطی خوانده می‌شود و در محیط توسعه MailHog جای آن را می‌گیرد.</li>
+        <li><b>زبان: فارسی راست‌به‌چپ</b> با اعداد لاتین، مطابق موکاپ‌ها. رشته‌ها در یک فایل جدا می‌مانند تا افزودن زبان دوم بعداً بدون بازنویسی ممکن باشد.</li>
+      </ul>
+    </div>
+    <div class="card"><h3>بقیه گزینه‌ها را خودم انتخاب کردم</h3>
+      <ul class="tick">
+        <li><b>ورودی سبد:</b> مقدار + میانگین قیمت خرید. دفتر تراکنش کامل به فاز ۲ رفت چون برای هدف «پایش و هشدار» ضروری نیست و کار گام ۴ را دو برابر می‌کرد.</li>
+        <li><b>واحد پایه:</b> فقط دلار. نمایش تومانی به یک منبع نرخ آزاد نیاز دارد که خودش یک وابستگی شکننده است؛ اگر لازم شد، فقط یک لایه تبدیل در نمایش اضافه می‌شود.</li>
+        <li><b>استقرار:</b> یک سرور مجازی با <code>docker-compose</code> و Caddy برای HTTPS خودکار؛ دامنه از متغیر محیطی خوانده می‌شود تا کد به دامنه گره نخورد.</li>
+        <li><b>ارائه‌دهنده ایمیل:</b> کد به هیچ ارائه‌دهنده‌ای گره نمی‌خورد — فقط <code>SMTP_HOST/PORT/USER/PASS/FROM</code>. پیشنهاد من سهم رایگان Brevo یا Mailgun است.</li>
+        <li><b>زمان‌بندی:</b> ارزیاب هشدار به‌جای هر ۲ ثانیه، با رسیدن هر به‌روزرسانی قیمت اجرا می‌شود؛ با نمونه‌گیری ۵ دقیقه‌ای، اجرای مکرر فقط CPU می‌سوزاند.</li>
+      </ul>
+    </div>
+    <div class="ask"><span class="q">برای شروع کدنویسی فقط دو چیز مانده</span>
+      <span class="o"><b>۱ —</b> چراغ سبز شما روی همین سند نسخه ۲. اگر تایید است، از گام ۱ نقشه راه (زیرساخت) شروع می‌کنم.</span>
+      <span class="o"><b>۲ —</b> کلیدها را خودتان در <code>.env</code> بگذارید، در چت نفرستید: کلید Demo کوین‌گکو، توکن ربات از <b>@BotFather</b> و مشخصات SMTP. من فایل <code>.env.example</code> را با جای خالی همه این‌ها می‌سازم و بدون آن‌ها هم پروژه با MailHog و داده نمونه بالا می‌آید.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>سند مرحله ۱ — کوین‌پالس · نسخه v2 · هیچ کدی از بک‌اند یا فرانت‌اند نوشته نشده است. با تایید شما، پیاده‌سازی از گام ۱ نقشه راه روی مخزن <span class="mono" dir="ltr">vshahparifard-cloud/crypto_portfolio</span> شروع می‌شود.</p>
+</footer>
+</div>

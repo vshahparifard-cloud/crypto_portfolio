@@ -1,0 +1,60 @@
+name: coinpulse
+
+x-backend: &backend
+  build:
+    context: ./backend
+  env_file: [.env]
+  depends_on:
+    postgres: {condition: service_healthy}
+    redis: {condition: service_started}
+  volumes: ["./backend:/app"]
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: coinpulse
+      POSTGRES_PASSWORD: coinpulse
+      POSTGRES_DB: coinpulse
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coinpulse"]
+      interval: 5s
+      retries: 10
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    ports: ["5432:5432"]
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redisdata:/data"]
+    ports: ["6379:6379"]
+
+  api:
+    <<: *backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    ports: ["8000:8000"]
+
+  worker:
+    <<: *backend
+    command: ["arq", "app.workers.settings.WorkerSettings"]
+
+  bot:
+    <<: *backend
+    command: ["python", "-m", "app.bot.runner"]
+
+  frontend:
+    build:
+      context: ./frontend
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    volumes: ["./frontend:/app", "/app/node_modules"]
+    ports: ["5173:5173"]
+    environment:
+      VITE_API_BASE: http://localhost:8000/api/v1
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports: ["8025:8025"]
+
+volumes:
+  pgdata:
+  redisdata:

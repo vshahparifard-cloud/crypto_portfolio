@@ -25,8 +25,11 @@ revision: ## autogenerate a migration: make revision m="add x"
 seed: ## fetch the top-50 coin list once (needs COINGECKO key or public rate limit)
 	$(COMPOSE) run --rm api python -m app.workers.oneshot sync_coins
 
-test: ## backend tests
+test: ## backend unit tests
 	$(COMPOSE) run --rm api pytest -q
+
+e2e: ## end-to-end probe against the running stack (writes to the dev database)
+	$(COMPOSE) run --rm api python scripts/e2e_probe.py
 
 lint: ## ruff + mypy
 	$(COMPOSE) run --rm api ruff check app tests
@@ -35,4 +38,4 @@ lint: ## ruff + mypy
 state: ## refresh docs/PROJECT_STATE.md
 	python3 scripts/update_project_state.py
 
-.PHONY: help up down logs migrate revision seed test lint state
+.PHONY: help up down logs migrate revision seed test e2e lint state

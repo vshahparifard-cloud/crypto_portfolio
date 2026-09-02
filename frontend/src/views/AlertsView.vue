@@ -31,12 +31,18 @@ function thresholdLabel(alert: Alert): string {
     : money(alert.threshold)
 }
 
-function distance(alert: Alert): string {
-  if (!alert.current_price || alert.kind === 'pct_up' || alert.kind === 'pct_down') return '—'
+/** Signed distance from the current price to the target, in percent. */
+function distanceValue(alert: Alert): number | null {
+  if (!alert.current_price || alert.kind === 'pct_up' || alert.kind === 'pct_down') return null
   const current = Number(alert.current_price)
   const target = Number(alert.threshold)
-  if (!current) return '—'
-  return percent(((target - current) / current) * 100, 1)
+  if (!current || !Number.isFinite(current)) return null
+  return ((target - current) / current) * 100
+}
+
+function distance(alert: Alert): string {
+  const value = distanceValue(alert)
+  return value === null ? '—' : percent(value, 1)
 }
 
 async function remove(alert: Alert) {
@@ -89,9 +95,7 @@ async function remove(alert: Alert) {
           <td>{{ KIND_LABELS[alert.kind] }}</td>
           <td class="n">{{ thresholdLabel(alert) }}</td>
           <td class="n">{{ money(alert.current_price) }}</td>
-          <td class="n" :class="signClass(distance(alert).replace('−', '-').replace('+', ''))">
-            {{ distance(alert) }}
-          </td>
+          <td class="n" :class="signClass(distanceValue(alert))">{{ distance(alert) }}</td>
           <td>
             <span :class="pillClass(alert.status)">{{ STATUS_LABELS[alert.status] }}</span>
             <span v-if="alert.is_one_shot" class="pill off" style="margin-inline-start: 4px"

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import secrets
+import uuid
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
@@ -39,7 +40,7 @@ def _fmt(value: Decimal | None, digits: int = 2) -> str:
     return f"{quantized:,}"
 
 
-async def create_link_token(session: AsyncSession, user_id) -> dict[str, str]:
+async def create_link_token(session: AsyncSession, user_id: uuid.UUID) -> dict[str, str]:
     token = secrets.token_urlsafe(24)
     session.add(
         TelegramLinkToken(
@@ -82,7 +83,9 @@ async def unlink(session: AsyncSession, user: User) -> None:
     await session.commit()
 
 
-async def holding_line(session: AsyncSession, user_id, coin_id: str, price: Decimal) -> str:
+async def holding_line(
+    session: AsyncSession, user_id: uuid.UUID, coin_id: str, price: Decimal
+) -> str:
     holding = (
         await session.execute(
             select(Holding)

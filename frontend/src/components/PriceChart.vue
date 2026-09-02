@@ -4,7 +4,7 @@
  * dashed lines, which is the whole reason this product needs a chart at all:
  * you should see how far the price is from your own targets.
  */
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as echarts from 'echarts/core'
 import { LineChart } from 'echarts/charts'
 import { GridComponent, MarkLineComponent, TooltipComponent } from 'echarts/components'
@@ -93,9 +93,15 @@ function resize() {
   chart?.resize()
 }
 
-onMounted(() => {
-  if (!host.value) return
+/** Init lazily: the canvas is hidden until data arrives, and echarts warns
+ *  (and mis-measures) when it is initialised at zero size. */
+function ensureChart(): void {
+  if (chart || !host.value || !host.value.clientWidth) return
   chart = echarts.init(host.value)
+}
+
+onMounted(() => {
+  ensureChart()
   render()
   window.addEventListener('resize', resize)
 })
@@ -108,9 +114,9 @@ onBeforeUnmount(() => {
 
 watch(
   () => [props.points, props.thresholds, props.loading],
-  () => {
-    // the canvas is kept in the DOM but hidden while empty, so it can measure
-    // zero on first paint; resize before drawing
+  async () => {
+    await nextTick()
+    ensureChart()
     chart?.resize()
     render()
   },

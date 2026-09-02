@@ -22,20 +22,20 @@ async def health(session: SessionDep) -> dict[str, Any]:
     try:
         await session.execute(text("select 1"))
         checks["database"] = "ok"
-    except Exception as exc:  # noqa: BLE001 - health must never raise
+    except Exception as exc:  # health must never raise
         checks["database"] = f"error: {type(exc).__name__}"
 
     try:
         await cache.redis_client().ping()
         checks["redis"] = "ok"
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:  # health must never raise
         checks["redis"] = f"error: {type(exc).__name__}"
 
     now = datetime.now(UTC)
     workers: dict[str, Any] = {}
     try:
         beats = await cache.heartbeats()
-    except Exception:  # noqa: BLE001
+    except Exception:  # health must never raise
         beats = {}
     for name, stamp in beats.items():
         if not stamp:

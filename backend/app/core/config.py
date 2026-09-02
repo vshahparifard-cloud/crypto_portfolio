@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,7 +12,9 @@ class Settings(BaseSettings):
     app_env: str = "dev"
     secret_key: str = "dev-only-secret-change-me-please-32b"
     public_base_url: str = "http://localhost:5173"
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5173"])
+    # kept as a plain string: pydantic-settings json-decodes list fields from the
+    # environment before any validator runs, so a comma separated value fails
+    cors_origins: str = "http://localhost:5173"
 
     database_url: str = "postgresql+asyncpg://coinpulse:coinpulse@postgres:5432/coinpulse"
     redis_url: str = "redis://redis:6379/0"
@@ -40,12 +41,9 @@ class Settings(BaseSettings):
     refresh_token_ttl_days: int = 30
     max_active_alerts: int = 50
 
-    @field_validator("cors_origins", mode="before")
-    @classmethod
-    def _split_origins(cls, value: object) -> object:
-        if isinstance(value, str):
-            return [item.strip() for item in value.split(",") if item.strip()]
-        return value
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
     @property
     def is_dev(self) -> bool:

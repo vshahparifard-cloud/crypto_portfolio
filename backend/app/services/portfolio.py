@@ -16,7 +16,9 @@ from app.services import cache
 ZERO = Decimal(0)
 
 
-async def _owned_holding(session: AsyncSession, user_id: uuid.UUID, holding_id: uuid.UUID) -> Holding:
+async def _owned_holding(
+    session: AsyncSession, user_id: uuid.UUID, holding_id: uuid.UUID
+) -> Holding:
     holding = (
         await session.execute(
             select(Holding)
@@ -43,16 +45,15 @@ async def _priced_rows(session: AsyncSession, user_id: uuid.UUID) -> list[dict[s
 
     coin_ids = [holding.coin_id for holding in holdings]
     live = await cache.latest_prices(coin_ids)
-    changes = dict(
-        (
-            await session.execute(
-                select(PriceSnapshot.coin_id, PriceSnapshot.pct_change_24h)
-                .where(PriceSnapshot.coin_id.in_(coin_ids))
-                .order_by(PriceSnapshot.coin_id, PriceSnapshot.ts.desc())
-                .distinct(PriceSnapshot.coin_id)
-            )
-        ).all()
-    )
+    change_rows = (
+        await session.execute(
+            select(PriceSnapshot.coin_id, PriceSnapshot.pct_change_24h)
+            .where(PriceSnapshot.coin_id.in_(coin_ids))
+            .order_by(PriceSnapshot.coin_id, PriceSnapshot.ts.desc())
+            .distinct(PriceSnapshot.coin_id)
+        )
+    ).all()
+    changes: dict[str, Decimal | None] = {row[0]: row[1] for row in change_rows}
 
     rows: list[dict[str, Any]] = []
     for holding in holdings:

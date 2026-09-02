@@ -5,6 +5,7 @@ aware and stored in UTC.
 """
 from __future__ import annotations
 
+import enum
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -60,6 +61,19 @@ PRICE = Numeric(24, 8)
 QTY = Numeric(36, 18)
 
 
+def enum_column(python_enum: type[enum.Enum], name: str) -> Enum:
+    """Store enum *values*, not member names.
+
+    SQLAlchemy defaults to the member name, which silently diverges whenever the
+    two differ (CandleInterval.h1 -> "h1" while the postgres type holds "1h").
+    """
+    return Enum(
+        python_enum,
+        name=name,
+        values_callable=lambda enum_cls: [member.value for member in enum_cls],
+    )
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -108,7 +122,7 @@ class EmailToken(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
-    purpose: Mapped[EmailPurpose] = mapped_column(Enum(EmailPurpose, name="email_purpose"))
+    purpose: Mapped[EmailPurpose] = mapped_column(enum_column(EmailPurpose, "email_purpose"))
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(
@@ -126,11 +140,11 @@ class EmailOutbox(Base):
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
     to_email: Mapped[str] = mapped_column(String(320))
-    kind: Mapped[EmailPurpose] = mapped_column(Enum(EmailPurpose, name="email_purpose"))
+    kind: Mapped[EmailPurpose] = mapped_column(enum_column(EmailPurpose, "email_purpose"))
     subject: Mapped[str] = mapped_column(String(200))
     body_html: Mapped[str] = mapped_column(Text)
     delivery_state: Mapped[DeliveryState] = mapped_column(
-        Enum(DeliveryState, name="delivery_state"), default=DeliveryState.pending
+        enum_column(DeliveryState, "delivery_state"), default=DeliveryState.pending
     )
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     next_retry_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -215,7 +229,7 @@ class Holding(Base):
     )
 
     portfolio: Mapped[Portfolio] = relationship(back_populates="holdings")
-    coin: Mapped[Coin] = relationship(lazy="joined")
+    coin: Mapped[Coin] = relationship(lazy="joined", innerjoin=True)
 
     __table_args__ = (
         UniqueConstraint("portfolio_id", "coin_id", name="uq_holdings_portfolio_coin"),
@@ -244,7 +258,7 @@ class OhlcCandle(Base):
 
     coin_id: Mapped[str] = mapped_column(ForeignKey("coins.id"), primary_key=True)
     interval: Mapped[CandleInterval] = mapped_column(
-        Enum(CandleInterval, name="candle_interval"), primary_key=True
+        enum_column(CandleInterval, "candle_interval"), primary_key=True
     )
     ts: Mapped[datetime] = mapped_column(DateTime(timezone=True), primary_key=True)
     open: Mapped[Decimal] = mapped_column(PRICE)
@@ -264,11 +278,11 @@ class Alert(Base):
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
     coin_id: Mapped[str] = mapped_column(ForeignKey("coins.id"), index=True)
-    kind: Mapped[AlertKind] = mapped_column(Enum(AlertKind, name="alert_kind"))
+    kind: Mapped[AlertKind] = mapped_column(enum_column(AlertKind, "alert_kind"))
     threshold: Mapped[Decimal] = mapped_column(PRICE)
     window_minutes: Mapped[int | None] = mapped_column(Integer)
     status: Mapped[AlertStatus] = mapped_column(
-        Enum(AlertStatus, name="alert_status"), default=AlertStatus.active
+        enum_column(AlertStatus, "alert_status"), default=AlertStatus.active
     )
     cooldown_minutes: Mapped[int] = mapped_column(Integer, default=60)
     is_one_shot: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -279,7 +293,7 @@ class Alert(Base):
     )
 
     user: Mapped[User] = relationship(back_populates="alerts")
-    coin: Mapped[Coin] = relationship(lazy="joined")
+    coin: Mapped[Coin] = relationship(lazy="joined", innerjoin=True)
 
     __table_args__ = (
         Index("ix_alerts_status_coin", "status", "coin_id"),
@@ -305,14 +319,14 @@ class AlertEvent(Base):
     sampled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     price_at_trigger: Mapped[Decimal] = mapped_column(PRICE)
     delivery_state: Mapped[DeliveryState] = mapped_column(
-        Enum(DeliveryState, name="delivery_state"), default=DeliveryState.pending
+        enum_column(DeliveryState, "delivery_state"), default=DeliveryState.pending
     )
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     next_retry_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     telegram_message_id: Mapped[int | None] = mapped_column(BigInteger)
     error: Mapped[str | None] = mapped_column(Text)
 
-    alert: Mapped[Alert] = relationship(lazy="joined")
+    alert: Mapped[Alert] = relationship(lazy="joined", innerjoin=True)
 
     __table_args__ = (
         UniqueConstraint("alert_id", "dedupe_bucket", name="uq_alert_events_dedupe"),

@@ -7,6 +7,7 @@ next to the code that decides when to send it.
 from __future__ import annotations
 
 import logging
+import uuid
 from datetime import UTC, datetime, timedelta
 from email.message import EmailMessage
 
@@ -64,7 +65,12 @@ def build_link(purpose: EmailPurpose, token: str) -> str:
 
 
 async def enqueue(
-    session: AsyncSession, *, user_id, to_email: str, purpose: EmailPurpose, token: str
+    session: AsyncSession,
+    *,
+    user_id: uuid.UUID,
+    to_email: str,
+    purpose: EmailPurpose,
+    token: str,
 ) -> EmailOutbox:
     copy = _COPY[purpose]
     row = EmailOutbox(

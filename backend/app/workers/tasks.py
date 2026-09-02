@@ -74,7 +74,7 @@ async def dispatch_alerts(ctx: dict[str, Any]) -> int:
                     text,
                     telegram_service.alert_keyboard(event.alert.coin_id, str(event.alert_id)),
                 )
-            except Exception as exc:  # noqa: BLE001 - retry policy owns every failure
+            except Exception as exc:  # retry policy owns every failure
                 _mark_failed(event, exc, TELEGRAM_RETRY)
                 log.warning("telegram delivery failed event=%s: %s", event.id, exc)
                 continue
@@ -93,7 +93,7 @@ async def dispatch_emails(ctx: dict[str, Any]) -> int:
         for row in await _claim(session, EmailOutbox):
             try:
                 await email_service.deliver(row)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:  # retry policy owns every failure
                 _mark_failed(row, exc, email_service.RETRY_SCHEDULE)
                 log.warning("email delivery failed row=%s: %s", row.id, exc)
                 continue
@@ -119,7 +119,9 @@ async def _claim(session: AsyncSession, model: type[Any]) -> list[Any]:
                 )
                 .order_by(model.next_retry_at.asc().nullsfirst())
                 .limit(BATCH)
-                .with_for_update(skip_locked=True)
+                # lock the outbox row only: postgres rejects FOR UPDATE that
+                # would touch the joined-in alert/coin rows
+                .with_for_update(skip_locked=True, of=model)
             )
         )
         .scalars()
@@ -139,6 +141,13 @@ def _mark_failed(row: Any, exc: Exception, plan: tuple[timedelta, ...]) -> None:
         row.next_retry_at = next_at
 
 
+# a fresh database wants history for every tracked coin, but that is two upstream
+# calls each; queue them spread out and capped so the first day cannot trip the
+# provider's per-minute limit (GOTCHAS)
+BACKFILL_PER_RUN = 25
+BACKFILL_SPACING = timedelta(seconds=45)
+
+
 async def sync_coin_list(ctx: dict[str, Any]) -> int:
     """Daily: re-establish the tracked top-N, then backfill anything new."""
     source: CoinGeckoSource = ctx["price_source"]
@@ -146,11 +155,16 @@ async def sync_coin_list(ctx: dict[str, Any]) -> int:
         stored = await market_service.sync_top_list(session, source, settings.top_n_coins)
         pending = (
             await session.execute(
-                select(Coin.id).where(Coin.is_tracked.is_(True), Coin.backfilled_at.is_(None))
+                select(Coin.id)
+                .where(Coin.is_tracked.is_(True), Coin.backfilled_at.is_(None))
+                .order_by(Coin.market_cap_rank.asc().nullslast())
+                .limit(BACKFILL_PER_RUN)
             )
         ).scalars().all()
-    for coin_id in pending:
-        await ctx["redis"].enqueue_job("backfill_coin", coin_id)
+    for index, coin_id in enumerate(pending, start=1):
+        await ctx["redis"].enqueue_job(
+            "backfill_coin", coin_id, _defer_by=BACKFILL_SPACING * index
+        )
     log.info("coin list synced: %s coins, %s queued for backfill", stored, len(pending))
     return stored
 

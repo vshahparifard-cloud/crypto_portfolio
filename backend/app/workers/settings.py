@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, ClassVar
 
 from arq import cron
 from arq.connections import RedisSettings
@@ -14,6 +14,8 @@ from app.workers import tasks
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s :: %(message)s"
 )
+# arq installs its own handler; without this every job line is printed twice
+logging.getLogger("arq").propagate = False
 
 
 def _poll_minutes() -> set[int]:
@@ -32,7 +34,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [
+    functions: ClassVar[list[Any]] = [
         tasks.poll_prices,
         tasks.dispatch_alerts,
         tasks.dispatch_emails,
@@ -40,7 +42,7 @@ class WorkerSettings:
         tasks.backfill_coin,
         tasks.prune_old_data,
     ]
-    cron_jobs = [
+    cron_jobs: ClassVar[list[Any]] = [
         # the single upstream call, then aggregate + evaluate (D13)
         cron(tasks.poll_prices, minute=_poll_minutes(), second=5, timeout=120),
         # retry sweeps: anything the fast path could not deliver

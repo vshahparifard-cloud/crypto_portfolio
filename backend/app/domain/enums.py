@@ -6,36 +6,36 @@ database, or a running stack.
 """
 from __future__ import annotations
 
-import enum
+from enum import StrEnum
 
 
-class AlertKind(str, enum.Enum):
+class AlertKind(StrEnum):
     price_above = "price_above"
     price_below = "price_below"
     pct_up = "pct_up"
     pct_down = "pct_down"
 
 
-class AlertStatus(str, enum.Enum):
+class AlertStatus(StrEnum):
     active = "active"
     cooling = "cooling"
     paused = "paused"
     expired = "expired"
 
 
-class DeliveryState(str, enum.Enum):
+class DeliveryState(StrEnum):
     pending = "pending"
     sent = "sent"
     failed = "failed"
     dead = "dead"
 
 
-class EmailPurpose(str, enum.Enum):
+class EmailPurpose(StrEnum):
     verify = "verify"
     reset = "reset"
 
 
-class CandleInterval(str, enum.Enum):
+class CandleInterval(StrEnum):
     h1 = "1h"
     d1 = "1d"
 

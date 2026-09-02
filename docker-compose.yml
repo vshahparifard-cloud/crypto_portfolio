@@ -21,18 +21,18 @@ services:
       interval: 5s
       retries: 10
     volumes: ["pgdata:/var/lib/postgresql/data"]
-    ports: ["5432:5432"]
+    ports: ["${POSTGRES_PORT:-5432}:5432"]
 
   redis:
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes"]
     volumes: ["redisdata:/data"]
-    ports: ["6379:6379"]
+    ports: ["${REDIS_PORT:-6379}:6379"]
 
   api:
     <<: *backend
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-    ports: ["8000:8000"]
+    ports: ["${API_PORT:-8000}:8000"]
 
   worker:
     <<: *backend
@@ -47,13 +47,13 @@ services:
       context: ./frontend
     command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
     volumes: ["./frontend:/app", "/app/node_modules"]
-    ports: ["5173:5173"]
+    ports: ["${WEB_PORT:-5173}:5173"]
     environment:
-      VITE_API_BASE: http://localhost:8000/api/v1
+      VITE_API_BASE: http://localhost:${API_PORT:-8000}/api/v1
 
   mailhog:
     image: mailhog/mailhog:latest
-    ports: ["8025:8025"]
+    ports: ["${MAILHOG_PORT:-8025}:8025"]
 
 volumes:
   pgdata:

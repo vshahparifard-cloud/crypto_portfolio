@@ -68,7 +68,7 @@ def _serialize(alert: Alert, current_price: Decimal | None) -> dict[str, Any]:
 async def _decorate(session: AsyncSession, alerts: list[Alert]) -> list[dict[str, Any]]:
     prices = await cache.latest_prices([alert.coin_id for alert in alerts])
     return [
-        _serialize(alert, prices.get(alert.coin_id, (None, None))[0])  # type: ignore[arg-type]
+        _serialize(alert, prices[alert.coin_id][0] if alert.coin_id in prices else None)
         for alert in alerts
     ]
 

@@ -15,9 +15,9 @@ log = logging.getLogger(__name__)
 
 async def main() -> None:
     if not settings.telegram_bot_token:
-        log.warning("TELEGRAM_BOT_TOKEN is empty — bot disabled, sleeping")
-        while True:
-            await asyncio.sleep(3600)
+        log.warning("TELEGRAM_BOT_TOKEN is empty — bot disabled, idling")
+        await asyncio.Event().wait()  # keeps the container alive without polling
+        return
     bot = bot_instance()
     dispatcher = build_dispatcher()
     await bot.delete_webhook(drop_pending_updates=False)

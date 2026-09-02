@@ -6,8 +6,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
  && rm -rf /var/lib/apt/lists/*
 
+# Dependencies are installed against a stub package so this layer only rebuilds
+# when pyproject.toml changes; the real sources are copied over it below and the
+# editable install already points at /app.
 COPY pyproject.toml ./
-RUN pip install --upgrade pip && pip install -e ".[dev]"
+RUN mkdir -p app && touch app/__init__.py \
+ && pip install --upgrade pip && pip install -e ".[dev]"
 
 COPY . .
 EXPOSE 8000

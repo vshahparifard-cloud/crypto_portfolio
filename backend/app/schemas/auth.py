@@ -26,6 +26,13 @@ class ResetIn(Schema):
     password: str = Field(min_length=10, max_length=128)
 
 
+class RegisterOut(Schema):
+    message: str
+    verification_required: bool
+    access_token: str | None = None
+    expires_in: int | None = None
+
+
 class TokenOut(Schema):
     access_token: str
     token_type: str = "bearer"

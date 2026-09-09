@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     smtp_from: str = "CoinPulse <no-reply@coinpulse.local>"
     smtp_starttls: bool = False
 
+    # D10 amended by the owner (2026-09-09): the verification gate can be turned
+    # off while real SMTP is not wired up. Default stays on.
+    require_email_verification: bool = True
+
     access_token_ttl_minutes: int = 15
     refresh_token_ttl_days: int = 30
     max_active_alerts: int = 50

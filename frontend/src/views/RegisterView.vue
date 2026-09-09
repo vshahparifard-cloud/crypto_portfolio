@@ -30,8 +30,12 @@ async function submit() {
   }
   busy.value = true
   try {
-    await auth.register(email.value, password.value)
-    await router.push({ name: 'verify-pending', query: { email: email.value } })
+    const result = await auth.register(email.value, password.value)
+    if (result.verification_required) {
+      await router.push({ name: 'verify-pending', query: { email: email.value } })
+    } else {
+      await router.push({ name: 'market' })
+    }
   } catch (exception) {
     error.value = exception instanceof ApiError ? exception.message : 'ثبت‌نام ناموفق بود'
   } finally {
@@ -69,7 +73,7 @@ async function submit() {
           {{ busy ? 'در حال ثبت…' : 'ثبت‌نام' }}
         </button>
         <span style="font-size: 11.5px; color: var(--ink-3)">
-          یک ایمیل تایید با اعتبار ۲۴ ساعت برایتان می‌فرستیم. تا تایید نشود، ورود ممکن نیست.
+          پس از ثبت‌نام مستقیم وارد حساب می‌شوید. (تایید ایمیل فعلاً غیرفعال است.)
         </span>
       </form>
       <div class="switcher">

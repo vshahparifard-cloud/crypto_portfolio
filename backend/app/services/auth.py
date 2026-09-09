@@ -55,8 +55,12 @@ async def _issue_email_token(
 
 
 async def register(session: AsyncSession, email: str, password: str) -> User:
+    """Create the account. With the verification gate off the user is usable at
+    once and no confirmation mail is queued — there would be nothing to confirm.
+    """
     normalized = email.strip().lower()
-    user = User(email=normalized, password_hash=hash_password(password), is_verified=False)
+    gate_on = settings.require_email_verification
+    user = User(email=normalized, password_hash=hash_password(password), is_verified=not gate_on)
     session.add(user)
     try:
         await session.flush()
@@ -65,12 +69,15 @@ async def register(session: AsyncSession, email: str, password: str) -> User:
         raise Conflict("این ایمیل قبلاً ثبت شده است") from exc
 
     session.add(Portfolio(user_id=user.id, name="سبد من", is_default=True))
-    await _issue_email_token(session, user, EmailPurpose.verify, VERIFY_TTL)
+    if gate_on:
+        await _issue_email_token(session, user, EmailPurpose.verify, VERIFY_TTL)
     await session.commit()
     return user
 
 
 async def resend_verification(session: AsyncSession, email: str) -> None:
+    if not settings.require_email_verification:
+        return  # nothing to confirm while the gate is off
     await enforce(
         f"resend:{email.strip().lower()}", 3, 3600, "بیش از حد درخواست ارسال دوباره داده‌اید"
     )
@@ -140,7 +147,7 @@ async def authenticate(session: AsyncSession, email: str, password: str) -> User
         raise Unauthorized("ایمیل یا رمز عبور نادرست است")
     if not user.is_active:
         raise Unauthorized("این حساب غیرفعال شده است")
-    if not user.is_verified:
+    if settings.require_email_verification and not user.is_verified:
         raise EmailNotVerified(
             "ابتدا ایمیل خود را تایید کنید", {"email": user.email, "action": "resend_verification"}
         )

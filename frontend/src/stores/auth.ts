@@ -38,7 +38,16 @@ export const useAuth = defineStore('auth', {
       }
     },
     async register(email: string, password: string) {
-      return api.post<{ message: string }>('/auth/register', { email, password })
+      const result = await api.post<{
+        message: string
+        verification_required: boolean
+        access_token: string | null
+      }>('/auth/register', { email, password })
+      if (!result.verification_required && result.access_token) {
+        setAccessToken(result.access_token)
+        this.user = await api.get<User>('/auth/me')
+      }
+      return result
     },
     async resendVerification(email: string) {
       return api.post<{ message: string }>('/auth/verify/resend', { email })

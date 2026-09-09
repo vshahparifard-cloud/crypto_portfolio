@@ -10,6 +10,7 @@ from app.schemas.auth import (
     EmailIn,
     LoginIn,
     RegisterIn,
+    RegisterOut,
     ResetIn,
     SettingsIn,
     TokenOut,
@@ -49,10 +50,23 @@ def _set_refresh_cookie(response: Response, token: str) -> None:
     )
 
 
-@router.post("/register", response_model=Message, status_code=status.HTTP_201_CREATED)
-async def register(payload: RegisterIn, session: SessionDep) -> Message:
-    await auth_service.register(session, payload.email, payload.password)
-    return Message(message="ایمیل تایید برای شما ارسال شد. تا تایید نشود ورود ممکن نیست.")
+@router.post("/register", response_model=RegisterOut, status_code=status.HTTP_201_CREATED)
+async def register(payload: RegisterIn, response: Response, session: SessionDep) -> RegisterOut:
+    user = await auth_service.register(session, payload.email, payload.password)
+    if settings.require_email_verification:
+        return RegisterOut(
+            message="ایمیل تایید برای شما ارسال شد. تا تایید نشود ورود ممکن نیست.",
+            verification_required=True,
+        )
+    # gate off: hand back a session so registration lands the user inside the app
+    access, expires_in, refresh = await auth_service.issue_tokens(session, user)
+    _set_refresh_cookie(response, refresh)
+    return RegisterOut(
+        message="حساب شما ساخته و وارد شدید.",
+        verification_required=False,
+        access_token=access,
+        expires_in=expires_in,
+    )
 
 
 @router.post("/login", response_model=TokenOut)

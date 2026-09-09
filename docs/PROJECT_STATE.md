@@ -9,7 +9,7 @@ gen=2026-09-09 | branch=main | commit=HEAD | dirty=no | migration_head=0001_init
 <!-- AUTO:STATUS END -->
 
 stage=implemented + verified on a live stack (2026-09-02) | design=docs/design/architecture.html (v2) | lang=fa-IR rtl only | base_ccy=USD
-owner_locked: price_source=coingecko_only | email_verification=required | ui_lang=fa | portfolio_input=qty+avg_price | deploy=vps+compose+caddy
+owner_locked: price_source=coingecko_only | email_verification=flagged (REQUIRE_EMAIL_VERIFICATION, OFF locally since 2026-09-09) | ui_lang=fa | portfolio_input=qty+avg_price | deploy=vps+compose+caddy
 
 ## STACK
 be: python3.12 · fastapi · sqlalchemy2-async · alembic · pydantic-v2 · arq · aiogram · asyncpg
@@ -39,6 +39,7 @@ D6 | telegram delivery = outbox pattern (alert_events) + exponential retry 5s/30
 D7 | fe charts = echarts | native candlestick, threshold lines, zoom | 2026-09-02
 D8 | alert firing = threshold CROSSING (prev vs curr price), not `curr > threshold` | prevents repeat spam while price stays in target zone | 2026-09-02
 D10 | email verification required before login (403 email_not_verified + resend), tokens hashed 24h single-use, same table serves password reset | owner decision | 2026-09-02
+D10a | D10 AMENDED by owner: gate lives behind REQUIRE_EMAIL_VERIFICATION (default true). off => register marks the user verified, queues no mail and returns a session; login skips the check | owner asked to drop confirmation while smtp is still a catcher | 2026-09-09
 D11 | smtp is provider-agnostic via env (SMTP_HOST/PORT/USER/PASS/FROM); mailhog service in dev compose | never couple code to one mail vendor | 2026-09-02
 D12 | email delivery reuses the outbox pattern of D6 (email_outbox) | one retry/delivery mechanism for both channels | 2026-09-02
 D13 | alert_evaluator runs on each new price sample, not on a fixed 2s tick | with 5m sampling a faster tick only burns cpu | 2026-09-02
@@ -70,7 +71,7 @@ partitioning: deferred (D15). plain tables + indexes today.
 
 ## API
 prefix=/api/v1 · errors={code,message,details} · docs=/docs
-auth: POST register, login(ratelimit 5/min, 403 email_not_verified), refresh, logout, verify/{token}, verify/resend(3/h), password/forgot(3/h, uniform response), password/reset ; GET me
+auth: POST register (-> {message, verification_required, access_token?} — carries a session when the gate is off), login(ratelimit 5/min, 403 email_not_verified only while gated), refresh, logout, verify/{token}, verify/resend(3/h, no-op while ungated), password/forgot(3/h, uniform response), password/reset ; GET me
 market: GET coins?limit&sort · coins/{id} · coins/{id}/chart?range=24h|7d|30d|90d|1y · search?q · SSE stream
 portfolio: GET summary · GET/POST holdings · PATCH/DELETE holdings/{id}
 alerts: GET/POST alerts · PATCH/DELETE alerts/{id} · GET alerts/events ; cap 50 active/user
@@ -160,7 +161,8 @@ POST   /api/v1/telegram/webhook/{secret}
 
 ## RECENT (auto — last commits)
 <!-- AUTO:RECENT START -->
-HEAD    2026-09-09 feat(ops): surface configuration that silently swallows outbound mail [api,core,docs,services]
+HEAD    2026-09-09 feat(auth): put the email confirmation gate behind a flag (amends D10) [api,core,docs,schemas,services,stores,views]
+5b0f587 2026-09-09 feat(ops): surface configuration that silently swallows outbound mail [api,core,docs,services]
 3093f99 2026-09-09 fix(telegram): drop the chart button when the base url is not public [docs,services]
 30a84d6 2026-09-02 fix: make the stack actually run — packaging, enum values, settings, locks [api,bot,components,core,docs,infra,models,services,views,workers]
 7017139 2026-09-02 feat: coinpulse — crypto portfolio with price alerts and telegram delivery [api,bot,ci,components,core,docs,fe,infra,migration,models,price,schemas,scripts,services,stores,tests,views,workers]

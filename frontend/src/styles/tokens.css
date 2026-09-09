@@ -1,23 +1,31 @@
-/* Design tokens — the single source of colour and type for the app (D7 note).
-   Green/red mean market direction only, amber means alerts, blue means actions. */
+/* Design tokens — the single source of colour and type for the app (D16).
+   Palette: dark slate with a green bias, emerald interface, mint gains.
+
+   The one rule that shapes this file: on a trading screen green already means
+   "up". So the interface accent is a DEEPER teal-emerald and gains get the
+   bright mint — two clearly separated greens instead of one ambiguous one.
+     teal-emerald -> interface (nav, buttons, links, chart line)
+     mint         -> price up
+     coral        -> price down
+     amber        -> alerts and thresholds only */
 :root {
-  --bg: #f1f3f5;
+  --bg: #eef3f0;
   --surface: #ffffff;
-  --surface-2: #f7f9fb;
-  --surface-3: #edf1f5;
-  --ink: #10151c;
-  --ink-2: #4e5a69;
-  --ink-3: #7a8797;
-  --line: #dce2e9;
-  --line-2: #c6d0db;
-  --accent: #2b50e0;
-  --accent-ink: #2b50e0;
-  --accent-soft: rgba(43, 80, 224, 0.09);
-  --signal: #9c5a00;
-  --signal-soft: rgba(226, 169, 60, 0.16);
-  --up: #0f8a5f;
-  --down: #c9312b;
-  --shadow: 0 1px 2px rgba(16, 21, 28, 0.05), 0 8px 24px -16px rgba(16, 21, 28, 0.18);
+  --surface-2: #f5f9f7;
+  --surface-3: #e7efea;
+  --ink: #0c1512;
+  --ink-2: #46574f;
+  --ink-3: #6b7c74;
+  --line: #d8e3dd;
+  --line-2: #c2d2ca;
+  --accent: #0b7a5e;
+  --accent-ink: #0a6b52;
+  --accent-soft: rgba(11, 122, 94, 0.1);
+  --signal: #8a5a12;
+  --signal-soft: rgba(245, 181, 71, 0.18);
+  --up: #067a52;
+  --down: #c93b3b;
+  --shadow: 0 1px 2px rgba(12, 21, 18, 0.05), 0 8px 24px -18px rgba(12, 21, 18, 0.22);
   --radius: 10px;
   --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
@@ -25,42 +33,42 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #0d1117;
-    --surface: #141a22;
-    --surface-2: #1a222c;
-    --surface-3: rgba(32, 41, 52, 0.5);
-    --ink: #e7ecf3;
-    --ink-2: #94a1b2;
-    --ink-3: #75828f;
-    --line: #253040;
-    --line-2: #33404f;
-    --accent: #6e8cff;
-    --accent-ink: #8aa2ff;
-    --accent-soft: rgba(110, 140, 255, 0.13);
-    --signal: #e3a93c;
-    --signal-soft: rgba(227, 169, 60, 0.15);
-    --up: #35c48d;
-    --down: #f0655c;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+    --bg: #0a100e;
+    --surface: #111917;
+    --surface-2: #16201d;
+    --surface-3: rgba(30, 44, 40, 0.55);
+    --ink: #e8f1ec;
+    --ink-2: #93a79e;
+    --ink-3: #6e837b;
+    --line: #1f2c28;
+    --line-2: #2b3a35;
+    --accent: #0ea47f;
+    --accent-ink: #2dd4a7;
+    --accent-soft: rgba(14, 164, 127, 0.15);
+    --signal: #f5b547;
+    --signal-soft: rgba(245, 181, 71, 0.16);
+    --up: #34d399;
+    --down: #f87171;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 12px 32px -20px rgba(0, 0, 0, 0.75);
   }
 }
 
 :root[data-theme='dark'] {
-  --bg: #0d1117;
-  --surface: #141a22;
-  --surface-2: #1a222c;
-  --surface-3: rgba(32, 41, 52, 0.5);
-  --ink: #e7ecf3;
-  --ink-2: #94a1b2;
-  --ink-3: #75828f;
-  --line: #253040;
-  --line-2: #33404f;
-  --accent: #6e8cff;
-  --accent-ink: #8aa2ff;
-  --accent-soft: rgba(110, 140, 255, 0.13);
-  --signal: #e3a93c;
-  --signal-soft: rgba(227, 169, 60, 0.15);
-  --up: #35c48d;
-  --down: #f0655c;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+  --bg: #0a100e;
+  --surface: #111917;
+  --surface-2: #16201d;
+  --surface-3: rgba(30, 44, 40, 0.55);
+  --ink: #e8f1ec;
+  --ink-2: #93a79e;
+  --ink-3: #6e837b;
+  --line: #1f2c28;
+  --line-2: #2b3a35;
+  --accent: #0ea47f;
+  --accent-ink: #2dd4a7;
+  --accent-soft: rgba(14, 164, 127, 0.15);
+  --signal: #f5b547;
+  --signal-soft: rgba(245, 181, 71, 0.16);
+  --up: #34d399;
+  --down: #f87171;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 12px 32px -20px rgba(0, 0, 0, 0.75);
 }

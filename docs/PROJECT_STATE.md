@@ -47,6 +47,7 @@ D13 | alert_evaluator runs on each new price sample, not on a fixed 2s tick | wi
 D14 | the 5m poll sends ids = tracked top-N UNION coins referenced by holdings/alerts | a coin demoted out of the top 50 must keep pricing or a user's portfolio silently freezes; same single request | 2026-09-02
 D15 | price_snapshots/ohlc_candles are plain tables + retention job, NOT partitioned yet (amends D3) | 50 coins x 5min = ~5M rows/year, well inside plain-table range; partitioning is one migration when volume needs it | 2026-09-02
 D16 | frontend styling = hand-written CSS tokens, no Tailwind (amends D7, see docs/adr/0002) | ships the approved mockups verbatim, one less build dependency | 2026-09-02
+D18 | palette = dark-slate/green trading terminal. TWO separated greens: deep teal-emerald = interface (nav/buttons/links/chart), bright mint = price up; coral = down; amber = alerts only | one green for both interface and gains makes direction unreadable | 2026-09-09
 D17 | domain enums live in app/domain/enums.py, free of sqlalchemy | lets alert_engine (highest bug risk) be unit tested with no db or framework | 2026-09-02
 D9 | money/qty = numeric, never float. qty numeric(36,18), price numeric(24,8). all ts = timestamptz UTC | binary float rounding unacceptable | 2026-09-02
 
@@ -95,7 +96,7 @@ rule: no external HTTP call outside services/price_source/ and bot/.
 rule: every endpoint returns a Pydantic schema; no dict/ORM leaks.
 rule: no bare except; domain errors are typed exceptions mapped to http codes in one place (core/errors.py).
 rule: fe types generated from OpenAPI into frontend/src/api/schema.d.ts; do not hand-write dtos.
-rule: colors/fonts only via frontend/src/styles/tokens.css (no tailwind, D16); green/red = market direction only, amber = alerts, blue = actions.
+rule: colors/fonts only via frontend/src/styles/tokens.css (no tailwind, D16); see D18 for what each hue means. never hard-code a colour in a component.
 rule: app/domain and app/services/alert_engine.py must import no framework (no sqlalchemy/fastapi) — keeps the core testable.
 rule: upstream calls only in services/price_source/*; telegram wire calls only in services/telegram.py.
 naming: alembic revisions NNNN_snake_summary ; commits conventional (feat|fix|chore|docs|refactor)(scope): subject
@@ -163,7 +164,8 @@ POST   /api/v1/telegram/webhook/{secret}
 
 ## RECENT (auto — last commits)
 <!-- AUTO:RECENT START -->
-HEAD    2026-09-09 feat(alerts): fire on creation when the condition already holds (amends D8) [docs,services,tests]
+HEAD    2026-09-09 feat(ui): green trading-terminal palette (D18) [docs,fe]
+ed58820 2026-09-09 feat(alerts): fire on creation when the condition already holds (amends D8) [docs,services,tests]
 74e8785 2026-09-09 feat(auth): put the email confirmation gate behind a flag (amends D10) [api,core,docs,schemas,services,stores,views]
 5b0f587 2026-09-09 feat(ops): surface configuration that silently swallows outbound mail [api,core,docs,services]
 3093f99 2026-09-09 fix(telegram): drop the chart button when the base url is not public [docs,services]

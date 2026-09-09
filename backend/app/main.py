@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import api_router
+from app.api.v1.health import config_warnings
 from app.core.config import settings
 from app.core.errors import install_error_handlers
 from app.services.cache import close_redis
@@ -19,8 +20,13 @@ logging.basicConfig(
 )
 
 
+log = logging.getLogger(__name__)
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    for warning in config_warnings():
+        log.warning("configuration: %s", warning)
     yield
     await close_redis()
 

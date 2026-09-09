@@ -11,7 +11,6 @@ import uuid
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
-from urllib.parse import urlparse
 
 import httpx
 from sqlalchemy import select
@@ -19,6 +18,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.errors import AppError, NotFound, UpstreamUnavailable
+from app.core.urls import is_public_http_url
 from app.db.models import AlertEvent, Holding, Portfolio, TelegramLinkToken, User
 from app.domain.enums import AlertKind
 
@@ -131,24 +131,6 @@ async def render_alert_message(session: AsyncSession, event: AlertEvent) -> str:
     body += await holding_line(session, alert.user_id, alert.coin_id, price)
     body += "\n\nداده هر ۵ دقیقه از CoinGecko نمونه‌گیری می‌شود."
     return body
-
-
-def is_public_http_url(url: str) -> bool:
-    """Telegram refuses inline URL buttons it cannot resolve publicly.
-
-    A local development base url (http://localhost:5183) makes sendMessage fail
-    with "Wrong HTTP URL" and takes the whole alert down with it, so the chart
-    button is only attached when the url could actually be opened by a phone.
-    """
-    parsed = urlparse(url)
-    host = parsed.hostname or ""
-    return (
-        parsed.scheme in ("http", "https")
-        and "." in host
-        and host != "localhost"
-        and not host.startswith("127.")
-        and host != "0.0.0.0"
-    )
 
 
 def alert_keyboard(coin_id: str, alert_id: str) -> dict[str, Any]:

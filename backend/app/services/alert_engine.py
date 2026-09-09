@@ -77,6 +77,35 @@ def should_fire(
     return False
 
 
+def holds_now(
+    spec: AlertSpec,
+    current_price: Decimal,
+    window_base_price: Decimal | None = None,
+) -> bool:
+    """Is the condition already true at this instant, crossing or not?
+
+    `should_fire` deliberately needs two samples so a price sitting inside the
+    target zone cannot re-alert. That is right for the steady state and wrong at
+    the moment an alert is armed: an alert created while its condition is
+    already satisfied should say so immediately instead of waiting for the price
+    to leave and come back. This predicate answers that one question.
+    """
+    if current_price <= 0:
+        return False
+    if spec.kind is AlertKind.price_above:
+        return current_price >= spec.threshold
+    if spec.kind is AlertKind.price_below:
+        return current_price <= spec.threshold
+    if window_base_price is None or window_base_price <= 0:
+        return False
+    move = pct_change(window_base_price, current_price)
+    if spec.kind is AlertKind.pct_up:
+        return move >= spec.threshold
+    if spec.kind is AlertKind.pct_down:
+        return move <= -spec.threshold
+    return False
+
+
 def is_cooling(last_triggered_at: datetime | None, cooldown_minutes: int, now: datetime) -> bool:
     if last_triggered_at is None:
         return False

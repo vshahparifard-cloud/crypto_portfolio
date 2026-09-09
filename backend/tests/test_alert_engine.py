@@ -7,6 +7,7 @@ from app.domain.enums import AlertKind
 from app.services.alert_engine import (
     AlertSpec,
     dedupe_bucket,
+    holds_now,
     in_quiet_hours,
     is_cooling,
     pct_change,
@@ -111,3 +112,38 @@ class TestDedupeBucket:
         first = datetime(2026, 9, 2, 12, 0, tzinfo=UTC)
         later = datetime(2026, 9, 2, 14, 30, tzinfo=UTC)
         assert dedupe_bucket(first, 60) != dedupe_bucket(later, 60)
+
+
+class TestHoldsNowAtArmTime:
+    """D8a: an alert created while its condition is already true fires at once."""
+
+    def test_price_above_already_passed_holds(self):
+        # market at 80,000 and the user asks for "above 70,000"
+        assert holds_now(spec(AlertKind.price_above, "70000"), D("80000"))
+
+    def test_price_above_not_reached_does_not_hold(self):
+        assert not holds_now(spec(AlertKind.price_above, "90000"), D("80000"))
+
+    def test_price_below_already_under_holds(self):
+        assert holds_now(spec(AlertKind.price_below, "90000"), D("80000"))
+
+    def test_price_below_still_above_does_not_hold(self):
+        assert not holds_now(spec(AlertKind.price_below, "70000"), D("80000"))
+
+    def test_exact_threshold_holds(self):
+        assert holds_now(spec(AlertKind.price_above, "80000"), D("80000"))
+
+    def test_pct_down_already_dropped_holds(self):
+        assert holds_now(spec(AlertKind.pct_down, "5", 15), D("188"), window_base_price=D("200"))
+
+    def test_pct_down_within_tolerance_does_not_hold(self):
+        assert not holds_now(
+            spec(AlertKind.pct_down, "5", 15), D("196"), window_base_price=D("200")
+        )
+
+    def test_pct_without_window_base_does_not_hold(self):
+        assert not holds_now(spec(AlertKind.pct_up, "5", 15), D("212"))
+
+    def test_arming_does_not_replace_the_crossing_rule(self):
+        # the steady state is still crossing-only: sitting above must stay quiet
+        assert not should_fire(spec(AlertKind.price_above, "70000"), D("80000"), D("81000"))

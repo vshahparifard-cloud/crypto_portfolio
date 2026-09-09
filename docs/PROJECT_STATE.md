@@ -38,6 +38,7 @@ D5 | auth = access JWT 15m (memory) + rotating refresh in HttpOnly cookie, hash 
 D6 | telegram delivery = outbox pattern (alert_events) + exponential retry 5s/30s/5m/30m | evaluator never blocks on network; no lost/dup alerts | 2026-09-02
 D7 | fe charts = echarts | native candlestick, threshold lines, zoom | 2026-09-02
 D8 | alert firing = threshold CROSSING (prev vs curr price), not `curr > threshold` | prevents repeat spam while price stays in target zone | 2026-09-02
+D8a | D8 AMENDED by owner: on CREATE an alert is armed with holds_now() and fires at once if the condition is already true; the crossing rule governs every later sample. creation no longer rejects a threshold the price has passed | owner: "above 70000" at price 80000 must alert now, not wait for a re-cross | 2026-09-09
 D10 | email verification required before login (403 email_not_verified + resend), tokens hashed 24h single-use, same table serves password reset | owner decision | 2026-09-02
 D10a | D10 AMENDED by owner: gate lives behind REQUIRE_EMAIL_VERIFICATION (default true). off => register marks the user verified, queues no mail and returns a session; login skips the check | owner asked to drop confirmation while smtp is still a catcher | 2026-09-09
 D11 | smtp is provider-agnostic via env (SMTP_HOST/PORT/USER/PASS/FROM); mailhog service in dev compose | never couple code to one mail vendor | 2026-09-02
@@ -74,7 +75,7 @@ prefix=/api/v1 · errors={code,message,details} · docs=/docs
 auth: POST register (-> {message, verification_required, access_token?} — carries a session when the gate is off), login(ratelimit 5/min, 403 email_not_verified only while gated), refresh, logout, verify/{token}, verify/resend(3/h, no-op while ungated), password/forgot(3/h, uniform response), password/reset ; GET me
 market: GET coins?limit&sort · coins/{id} · coins/{id}/chart?range=24h|7d|30d|90d|1y · search?q · SSE stream
 portfolio: GET summary · GET/POST holdings · PATCH/DELETE holdings/{id}
-alerts: GET/POST alerts · PATCH/DELETE alerts/{id} · GET alerts/events ; cap 50 active/user
+alerts: GET/POST alerts (POST arms immediately: an already-true condition fires before the response) · PATCH/DELETE alerts/{id} · GET alerts/events ; cap 50 active/user
 telegram: POST link, test · DELETE link · POST webhook/{secret}
 ops: GET /health
 
@@ -116,7 +117,8 @@ test: alert_engine crossing logic has unit tests before any code that uses it (h
 - redis pubsub is fire-and-forget: never the source of truth for alerts; evaluator reads the cached value.
 - POLL_INTERVAL_SECONDS=300 is the floor on the free plan. 180s => ~14.4k req/month => cap blown mid-month.
 - is_tracked is owned by sync_top_list only; the 5m poll must never re-track a demoted coin.
-- a fresh alert stays quiet until it has seen two samples (no previous price => no crossing). intentional.
+- a fresh alert is armed via holds_now() at creation (D8a); after that it needs two samples and a real crossing.
+- re-activating a paused alert (PATCH status=active) clears last_triggered_at but does NOT re-arm; it waits for a crossing.
 - the post-commit hook amends; the state file writes `commit=HEAD` because the final sha is not known yet.
 - chart_backfill costs 2 calls per coin: sync_coin_list queues at most 25/day, spaced 45s (BACKFILL_PER_RUN/SPACING). never queue all 50 at once.
 - sqlalchemy Enum sends member NAMES by default; every enum column goes through db/models.enum_column so values are stored (CandleInterval.h1 -> '1h').
@@ -161,7 +163,8 @@ POST   /api/v1/telegram/webhook/{secret}
 
 ## RECENT (auto — last commits)
 <!-- AUTO:RECENT START -->
-HEAD    2026-09-09 feat(auth): put the email confirmation gate behind a flag (amends D10) [api,core,docs,schemas,services,stores,views]
+HEAD    2026-09-09 feat(alerts): fire on creation when the condition already holds (amends D8) [docs,services,tests]
+74e8785 2026-09-09 feat(auth): put the email confirmation gate behind a flag (amends D10) [api,core,docs,schemas,services,stores,views]
 5b0f587 2026-09-09 feat(ops): surface configuration that silently swallows outbound mail [api,core,docs,services]
 3093f99 2026-09-09 fix(telegram): drop the chart button when the base url is not public [docs,services]
 30a84d6 2026-09-02 fix: make the stack actually run — packaging, enum values, settings, locks [api,bot,components,core,docs,infra,models,services,views,workers]

@@ -24,6 +24,7 @@ from app.services import cache
 from app.services.alert_engine import (
     AlertSpec,
     dedupe_bucket,
+    holds_now,
     in_quiet_hours,
     is_cooling,
     should_fire,
@@ -118,19 +119,6 @@ async def create_alert(
             raise AppError("درصد باید بین ۰ و ۱۰۰ باشد")
     else:
         window_minutes = None
-        sample = await cache.latest_price(coin_id)
-        if sample is not None:
-            price = sample[0]
-            if kind is AlertKind.price_above and threshold <= price:
-                raise AppError(
-                    "حد بالا باید بیشتر از قیمت فعلی باشد، وگرنه هرگز عبوری رخ نمی‌دهد",
-                    {"current_price": str(price)},
-                )
-            if kind is AlertKind.price_below and threshold >= price:
-                raise AppError(
-                    "حد پایین باید کمتر از قیمت فعلی باشد، وگرنه هرگز عبوری رخ نمی‌دهد",
-                    {"current_price": str(price)},
-                )
 
     alert = Alert(
         user_id=user_id,
@@ -145,7 +133,33 @@ async def create_alert(
     session.add(alert)
     await session.commit()
     await session.refresh(alert, attribute_names=["coin", "created_at"])
+    await arm_alert(session, alert)
     return (await _decorate(session, [alert]))[0]
+
+
+async def arm_alert(session: AsyncSession, alert: Alert) -> bool:
+    """Evaluate a freshly created alert against the current price (D8a).
+
+    An alert whose condition is already true fires at once — waiting for a
+    crossing would mean silence while the very thing the user asked about is
+    happening. From the second sample onwards the crossing rule takes over, so
+    this cannot become a repeating notification.
+    """
+    sample = await cache.latest_price(alert.coin_id)
+    if sample is None:
+        return False
+    price, sampled_at = sample
+    spec = AlertSpec(
+        kind=alert.kind, threshold=alert.threshold, window_minutes=alert.window_minutes
+    )
+    if not holds_now(spec, price, await _window_base(alert, sampled_at)):
+        return False
+    user = await session.get(User, alert.user_id)
+    if user is None:
+        return False
+    fired = await _record_event(session, alert, user, price, sampled_at, datetime.now(UTC))
+    await session.commit()
+    return fired
 
 
 async def update_alert(
@@ -209,6 +223,53 @@ async def list_events(
     ]
 
 
+async def _record_event(
+    session: AsyncSession,
+    alert: Alert,
+    user: User,
+    price: Decimal,
+    sampled_at: datetime,
+    now: datetime,
+) -> bool:
+    """Write the outbox row and park the alert. False if another run got there first."""
+    statement = pg_insert(AlertEvent).values(
+        id=uuid.uuid4(),
+        alert_id=alert.id,
+        dedupe_bucket=dedupe_bucket(sampled_at, alert.cooldown_minutes),
+        triggered_at=now,
+        sampled_at=sampled_at,
+        price_at_trigger=price,
+        delivery_state=DeliveryState.pending,
+        attempts=0,
+        next_retry_at=_quiet_delay(user, now),
+    )
+    result = await session.execute(
+        statement.on_conflict_do_nothing(constraint="uq_alert_events_dedupe").returning(
+            AlertEvent.id
+        )
+    )
+    if result.scalar_one_or_none() is None:
+        return False
+    alert.last_triggered_at = now
+    alert.status = AlertStatus.paused if alert.is_one_shot else AlertStatus.cooling
+    log.info(
+        "alert fired id=%s coin=%s kind=%s price=%s",
+        alert.id,
+        alert.coin_id,
+        alert.kind.value,
+        price,
+    )
+    return True
+
+
+async def _window_base(alert: Alert, sampled_at: datetime) -> Decimal | None:
+    if alert.kind not in PCT_KINDS or not alert.window_minutes:
+        return None
+    return await cache.price_at_or_before(
+        alert.coin_id, sampled_at - timedelta(minutes=alert.window_minutes)
+    )
+
+
 def _quiet_delay(user: User, now: datetime) -> datetime:
     """Delivery time that respects the user's quiet hours; the event is recorded now."""
     try:
@@ -254,47 +315,14 @@ async def evaluate_active_alerts(session: AsyncSession) -> int:
         if is_cooling(alert.last_triggered_at, alert.cooldown_minutes, now):
             continue
 
-        window_base: Decimal | None = None
-        if alert.kind in PCT_KINDS and alert.window_minutes:
-            window_base = await cache.price_at_or_before(
-                alert.coin_id, sampled_at - timedelta(minutes=alert.window_minutes)
-            )
-
         spec = AlertSpec(
             kind=alert.kind, threshold=alert.threshold, window_minutes=alert.window_minutes
         )
+        window_base = await _window_base(alert, sampled_at)
         if not should_fire(spec, previous.get(alert.coin_id), current_price, window_base):
             continue
-
-        statement = pg_insert(AlertEvent).values(
-            id=uuid.uuid4(),
-            alert_id=alert.id,
-            dedupe_bucket=dedupe_bucket(sampled_at, alert.cooldown_minutes),
-            triggered_at=now,
-            sampled_at=sampled_at,
-            price_at_trigger=current_price,
-            delivery_state=DeliveryState.pending,
-            attempts=0,
-            next_retry_at=_quiet_delay(user, now),
-        )
-        result = await session.execute(
-            statement.on_conflict_do_nothing(constraint="uq_alert_events_dedupe").returning(
-                AlertEvent.id
-            )
-        )
-        if result.scalar_one_or_none() is None:
-            continue  # another evaluator already recorded this crossing
-
-        created += 1
-        alert.last_triggered_at = now
-        alert.status = AlertStatus.paused if alert.is_one_shot else AlertStatus.cooling
-        log.info(
-            "alert fired id=%s coin=%s kind=%s price=%s",
-            alert.id,
-            alert.coin_id,
-            alert.kind.value,
-            current_price,
-        )
+        if await _record_event(session, alert, user, current_price, sampled_at, now):
+            created += 1
 
     await session.commit()
     await _reactivate_cooled(session, now)
